@@ -1,4 +1,5 @@
 #include<iostream>
+#include<filesystem>
 
 #include"log.h"
 #include"glad/glad.h"
@@ -17,6 +18,9 @@ int main()
 {
 	core::LogManager logger;
 	logger.initialize();
+
+	MCLONE_INFO(" cwd:{}", std::filesystem::current_path().string());
+
 	core::Window window;
 	window.create(core::WindowProperties());
 
@@ -68,7 +72,7 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	graphics::Shader shader(vertexShaderSource, fragmentShaderSource);
+	graphics::Shader shader("src/shaders/vertex.glsl", "src/shaders/fragmemt.glsl");
 
 	while (!window.m_ShouldClose)
 	{

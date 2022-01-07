@@ -36,4 +36,8 @@
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\core\logmanager.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\vertex.glsl" />
+    <None Include="src\shaders\fragment.glsl" />
+  </ItemGroup>
 </Project>

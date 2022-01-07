@@ -1,69 +1,85 @@
+#include<filesystem>
+#include<fstream>
+#include<sstream>
 #include"graphics/shader.h"
 #include"log.h"
 #include"glad/glad.h"
 
 namespace graphics
 {
-	Shader::Shader(const std::string& vertexSource, const std::string& fragmentSource)		// creates shader program from shader source
+	Shader::Shader(const std::string& vertexSourcePath, const std::string& fragmentSourcePath)		// creates shader program from shader source
 	{
-		m_ProgramId = glCreateProgram();
+		MCLONE_ASSERT(std::filesystem::exists(vertexSourcePath), "Vertex shader path is not valid!");
+		MCLONE_ASSERT(std::filesystem::exists(fragmentSourcePath), "Fragment shader path is not valid!");
+
+		std::ifstream vertexFile(vertexSourcePath);
+		std::ifstream fragFile(fragmentSourcePath);
+
+		std::stringstream vS, fS;
+		vS << vertexFile.rdbuf();
+		fS << fragFile.rdbuf();
+		std::string vertexSource = vS.str();
+		std::string fragmentSource = fS.str();
+
+
+		m_ProgramId = glCreateProgram();	
 
 		int status = GL_FALSE;
 		char errorLog[512];
-		uint32_t vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+		uint32_t vertexShaderId = glCreateShader(GL_VERTEX_SHADER); 
 
 		{
-			const GLchar* vertSource = vertexSource.c_str();
-			glShaderSource(vertexShaderId, 1, &vertSource, NULL);
-			glCompileShader(vertexShaderId);
-			glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &status);
+			const GLchar * vertSource = vertexSource.c_str();
+			glShaderSource(vertexShaderId, 1, &vertSource, NULL);	
+			glCompileShader(vertexShaderId);	
+			glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &status);	
 			if (status != GL_TRUE)
 			{
-				glGetShaderInfoLog(vertexShaderId, sizeof(errorLog), NULL, errorLog);
-				MCLONE_ERROR("Vertex Shader Compilation Error : {}", errorLog);
+				glGetShaderInfoLog(vertexShaderId, sizeof(errorLog), NULL, errorLog);	
+				MCLONE_ERROR("Vertex Shader Compilation Error : {}",errorLog);
 			}
 			else
 			{
-				glAttachShader(m_ProgramId, vertexShaderId);
+				glAttachShader(m_ProgramId, vertexShaderId);	
 			}
 		}
 
-		uint32_t fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-		if (status == GL_TRUE)
-		{
-			const GLchar* fragSource = fragmentSource.c_str();
-			glShaderSource(fragmentShaderId, 1, &fragSource, NULL);
-			glCompileShader(fragmentShaderId);
-			glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &status);
-			if (status != GL_TRUE)
+		uint32_t fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);			
+			if (status == GL_TRUE)
 			{
-				glGetShaderInfoLog(fragmentShaderId, sizeof(errorLog), NULL, errorLog);
-				MCLONE_ERROR("Fragment Shader Compilation Error: {}", errorLog);
+				const GLchar* fragSource = fragmentSource.c_str();
+				glShaderSource(fragmentShaderId, 1, &fragSource, NULL);		
+					glCompileShader(fragmentShaderId);		
+					glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &status);		
+					if (status != GL_TRUE)
+					{
+						glGetShaderInfoLog(fragmentShaderId, sizeof(errorLog), NULL, errorLog);		
+							MCLONE_ERROR("Fragment Shader Compilation Error: {}", errorLog);
+					}
+					else
+					{
+						glAttachShader(m_ProgramId, fragmentShaderId);		
+					}
 			}
-			else
-			{
-				glAttachShader(m_ProgramId, fragmentShaderId);
-			}
-		}
 
 		MCLONE_ASSERT(status == GL_TRUE, "Error Compiling Shader");
 		if (status == GL_TRUE)
 		{
-			glLinkProgram(m_ProgramId);
-			glValidateProgram(m_ProgramId);
-			glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &status);
-			if (status != GL_TRUE)
-			{
-				glGetProgramInfoLog(m_ProgramId, sizeof(errorLog), NULL, errorLog);
-				MCLONE_ERROR("shader link Error: {}", errorLog);
-				glDeleteProgram(m_ProgramId);
-				m_ProgramId = -1;//inavlid value
-			}
+			glLinkProgram(m_ProgramId);		
+				glValidateProgram(m_ProgramId);		
+				glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &status);		
+				if (status != GL_TRUE)
+				{
+					glGetProgramInfoLog(m_ProgramId, sizeof(errorLog), NULL, errorLog);		
+						MCLONE_ERROR("shader link Error: {}", errorLog);
+					glDeleteProgram(m_ProgramId);		
+						m_ProgramId = -1;//inavlid value
+				}
 
 		}
 
-		glDeleteShader(vertexShaderId);
-		glDeleteShader(fragmentShaderId);
+		glDeleteShader(vertexShaderId);		
+			glDeleteShader(fragmentShaderId);		
 
 	}
 

@@ -8,7 +8,7 @@ namespace graphics
 	class Shader
 	{
 	public:
-		Shader(const std::string& vertexSource, const std::string& fragmentSource);
+		Shader(const std::string& vertexSourcePath, const std::string& fragmentSourcePath);
 		~Shader();
 
 		void bind();
