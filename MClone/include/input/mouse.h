@@ -24,11 +24,11 @@ namespace input
 
 	enum class buttons
 	{
-		LEFT = 1,
-		MIDDLE = 2,
-		RIGHT = 3,
-		X1 = 4,
-		X2 = 5
+		MBUTTON_LEFT = 1,
+		MBUTTON_MIDDLE = 2,
+		MBUTTON_RIGHT = 3,
+		MBUTTON_X1 = 4,
+		MBUTTON_X2 = 5
 	};
 
 }
