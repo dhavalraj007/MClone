@@ -101,12 +101,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\logmanager.h" />
     <ClInclude Include="include\core\window.h" />
+    <ClInclude Include="include\graphics\shader.h" />
     <ClInclude Include="include\input\keyboard.h" />
     <ClInclude Include="include\input\mouse.h" />
+    <ClInclude Include="include\log.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\logmanager.cpp" />
     <ClCompile Include="src\core\window.cpp" />
+    <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\input\keyboard.cpp" />
     <ClCompile Include="src\input\mouse.cpp" />
     <ClCompile Include="src\main.cpp" />

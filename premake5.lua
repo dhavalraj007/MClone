@@ -75,7 +75,7 @@ project "MClone"
         
         defines
         {
-            "BANANA_CONFIG_DEBUG"
+            "MCLONE_CONFIG_DEBUG"
         }
         runtime "Debug"
         symbols "on"
@@ -84,7 +84,7 @@ project "MClone"
         
         defines
         {
-            "BANANA_CONFIG_RELEASE"
+            "MCLONE_CONFIG_RELEASE"
         }
         runtime "Release"
         symbols "off"

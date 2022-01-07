@@ -14,7 +14,7 @@ namespace input
 	{
 		m_LastKeyState = m_CurrKeyState;
 		const uint8_t* state = SDL_GetKeyboardState(nullptr);
-		for (int i = static_cast<int>(Keys::FIRST); i < KeyCount; i++)
+		for (int i = static_cast<int>(Keys::MKEY_FIRST); i < KeyCount; i++)
 		{
 			m_CurrKeyState[i] = state[i];
 		}
