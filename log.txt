@@ -1,0 +1,20 @@
+[2022-01-10 23:11:26.089] glCreateVertexArrays 1
+[2022-01-10 23:11:26.089] glCreateBuffers 1,1
+[2022-01-10 23:11:26.090] glVertexArrayVertexBuffer 1,0,1,0,12
+[2022-01-10 23:11:26.090] glCreateBuffers 1,1
+[2022-01-10 23:11:26.091] glVertexArrayElementBuffer 1,1
+[2022-01-10 23:11:26.091] glVertexArrayAttribFormat 1,0,3,5126,0,0
+[2022-01-10 23:11:26.091] glVertexArrayAttribBinding 1,0,0
+[2022-01-10 23:11:26.091] glEnableVertexArrayAttrib 1,0
+
+
+[2022-01-10 23:19:34.941] glCreateVertexArrays 1
+[2022-01-10 23:19:34.942] glCreateBuffers 1,1
+[2022-01-10 23:19:34.942] glNamedBufferData 1,6,99,35044
+[2022-01-10 23:19:34.943] glVertexArrayElementBuffer 1,1
+[2022-01-10 23:19:34.943] glCreateBuffers 1,2
+[2022-01-10 23:19:34.943] glNamedBufferData 2,48,99,35044
+[2022-01-10 23:19:34.943] glVertexArrayVertexBuffer 1,0,2,0,12
+[2022-01-10 23:19:34.944] glVertexArrayAttribFormat 1,0,3,5126,0,0
+[2022-01-10 23:19:34.944] glVertexArrayAttribBinding 1,0,0
+[2022-01-10 23:19:34.944] glEnableVertexArrayAttrib 1,0

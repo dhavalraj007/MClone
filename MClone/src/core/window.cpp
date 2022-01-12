@@ -1,4 +1,5 @@
 #include "core\window.h"
+#include"log.h"
 #include<sdl2/SDL.h>
 #include<glad/glad.h>
 #include<iostream>
@@ -40,12 +41,18 @@ namespace core
 		}
 		SDL_SetWindowMinimumSize(m_Window, props.wMin, props.hMin);
 		
-		m_Context = SDL_GL_CreateContext(m_Window);
 		
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+		m_Context = SDL_GL_CreateContext(m_Window);
+
+		int major, minor;
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &minor);
+		MCLONE_TRACE("GLcontext version {}.{}", major, minor);
 
 		gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 		glViewport(0, 0, props.w, props.h);

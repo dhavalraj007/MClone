@@ -7,37 +7,92 @@
     <Filter Include="include\core">
       <UniqueIdentifier>{A17DD969-8DE0-680E-3666-A1C422A83491}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\graphics">
+      <UniqueIdentifier>{099E0101-F596-2053-1EC9-05D80A21005F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\input">
+      <UniqueIdentifier>{683275A5-D4F2-F0DB-9D2D-3A5909AD35B8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\core">
       <UniqueIdentifier>{C55F2ECF-B12C-89DA-DA45-7782C671BE68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\graphics">
+      <UniqueIdentifier>{2DF282EC-1955-1291-C2DA-4A47AE1CDE13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\input">
+      <UniqueIdentifier>{0C5966B5-78C3-1A2C-C101-CCD12DABF880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\shaders">
+      <UniqueIdentifier>{26450F9B-92FA-8790-1BEF-816787A37E94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\logmanager.h">
+      <Filter>include\core</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\window.h">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\input\mouse.h" />
-    <ClInclude Include="include\input\keyboard.h" />
-    <ClInclude Include="include\graphics\shader.h" />
-    <ClInclude Include="include\core\logmanager.h" />
-    <ClInclude Include="include\log.h" />
+    <ClInclude Include="include\graphics\helpers.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\shader.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\texture.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\vertex.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input\keyboard.h">
+      <Filter>include\input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input\mouse.h">
+      <Filter>include\input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\log.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\logmanager.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
     <ClCompile Include="src\core\window.cpp">
       <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\helpers.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\shader.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\texture.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\vertex.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\keyboard.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\mouse.cpp">
+      <Filter>src\input</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\input\mouse.cpp" />
-    <ClCompile Include="src\input\keyboard.cpp" />
-    <ClCompile Include="src\graphics\shader.cpp" />
-    <ClCompile Include="src\core\logmanager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\vertex.glsl" />
-    <None Include="src\shaders\fragment.glsl" />
+    <None Include="src\shaders\fragment.glsl">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="src\shaders\vertex.glsl">
+      <Filter>src\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

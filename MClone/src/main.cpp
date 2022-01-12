@@ -1,5 +1,6 @@
 #include<iostream>
 #include<filesystem>
+#include<memory>
 
 #include"log.h"
 #include"glad/glad.h"
@@ -12,6 +13,9 @@
 #include"input/keyboard.h"
 
 #include"graphics/shader.h"
+#include"graphics/vertex.h"
+#include"graphics/texture.h"
+
 
 
 int main()
@@ -27,52 +31,57 @@ int main()
 	input::Mouse::Init();
 	input::Keyboard::Init();
 
-	std::string vertexShaderSource = "#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"void main()\n"
-		"{\n"
-		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"}\0";
-	std::string fragmentShaderSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-		"}\n\0";
-
-	
 	float vertices[] = {
 			 0.5f,  0.5f, 0.f,      //top right
 			 0.5f, -0.5f, 0.f,      //bottom right
 			-0.5f, -0.5f, 0.f,       //bottom left
 			-0.5f,  0.5f, 0.f      //top left
-		};
+	};
 	uint8_t indices[] = {
 		0,1,3,
 		3,1,2
 	};
+	
+	std::shared_ptr<graphics::VertexArray> vao = std::make_shared<graphics::VertexArray>();
+	{
+		MCLONE_CREATE_VERTEX_BUFFER(vb, float);
+		vb->pushVertex({  1.0f,1.0f, 0.5f,  0.5f, 0.f });   //top right
+		vb->pushVertex({  1.0f,0.0f, 0.5f, -0.5f, 0.f });    //bottom right
+		vb->pushVertex({  0.0f,0.0f,-0.5f, -0.5f, 0.f });   //bottom left
+		vb->pushVertex({  0.0f,1.0f,-0.5f,  0.5f, 0.f });   //top left
+		vb->setLayout({ 2,3 });
+		vb->upload(false);
+		vao->pushBuffer(std::move(vb));
+	}
+	//{
+	//	MCLONE_CREATE_VERTEX_BUFFER(vb, float);
+	//	vb->pushVertex({  0.5f,  0.5f, 0.f });   //top right
+	//	vb->pushVertex({ 0.5f, -0.5f, 0.f });    //bottom right
+	//	vb->pushVertex({ -0.5f, -0.5f, 0.f });   //bottom left
+	//	vb->pushVertex({ -0.5f,  0.5f, 0.f });   //top left
+	//	vb->setLayout({ 3 });
+	//	vb->upload(false);
+	//	vao->pushBuffer(std::move(vb));
+	//}
+	//{
+	//	MCLONE_CREATE_VERTEX_BUFFER(vb, float);
+	//	vb->pushVertex({ 1.0f,1.0f });
+	//	vb->pushVertex({ 1.0f,0.0f });
+	//	vb->pushVertex({ 0.0f,0.0f });
+	//	vb->pushVertex({ 0.0f,1.0f });
+	//	vb->setLayout({ 2 });
+	//	vb->upload(false);
+	//	vao->pushBuffer(std::move(vb));
+	//}
+	vao->setElements({ 0,1,3,3,1,2 });
+	vao->upload();
+	
+	graphics::Texture texture("tex1", "res/container.jpg", 1);
 
+	graphics::Shader shader("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
-	uint32_t vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	uint32_t vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) , vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	uint32_t ebo;
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	graphics::Shader shader("src/shaders/vertex.glsl", "src/shaders/fragmemt.glsl");
+	texture.bind();
+	shader.setUniformInt(texture.getName(), texture.getTexUnit());
 
 	while (!window.m_ShouldClose)
 	{
@@ -81,10 +90,11 @@ int main()
 		input::Mouse::Update();
 		input::Keyboard::Update();
 		
+		vao->bind();
+		texture.bind();
 		shader.bind();
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
-		
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		window.swapbuffers();
 	}
 	window.shutdown();

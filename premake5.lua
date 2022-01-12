@@ -16,6 +16,7 @@ externals["sdl2"] = "external/sdl2"
 externals["spdlog"] = "external/spdlog"
 externals["glad"] = "external/glad"
 externals["glm"] = "external/glm"
+externals["stb"] = "external/stb"
 
 -- process glad before anything else
 include "external/glad"
@@ -41,7 +42,8 @@ project "MClone"
         "%{externals.sdl2}/include",
         "%{externals.spdlog}/include",
         "%{externals.glad}/include",
-        "%{externals.glm}/include"
+        "%{externals.glm}/include",
+        "%{externals.stb}/include"
     }
 
     libdirs
@@ -62,6 +64,7 @@ project "MClone"
         "%{prj.name}/include/**.hpp",   
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
+        "%{prj.name}/src/**.glsl",
         "%{prj.name}/**.natvis"
     }
     

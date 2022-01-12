@@ -46,7 +46,7 @@
     <IntDir>..\bin-obj\Debug\MClone\</IntDir>
     <TargetName>MClone</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;$(IncludePath)</IncludePath>
+    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,14 +54,14 @@
     <IntDir>..\bin-obj\Release\MClone\</IntDir>
     <TargetName>MClone</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;$(IncludePath)</IncludePath>
+    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;BANANA_CONFIG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;MCLONE_CONFIG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -80,7 +80,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;BANANA_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;MCLONE_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -103,7 +103,10 @@
   <ItemGroup>
     <ClInclude Include="include\core\logmanager.h" />
     <ClInclude Include="include\core\window.h" />
+    <ClInclude Include="include\graphics\helpers.h" />
     <ClInclude Include="include\graphics\shader.h" />
+    <ClInclude Include="include\graphics\texture.h" />
+    <ClInclude Include="include\graphics\vertex.h" />
     <ClInclude Include="include\input\keyboard.h" />
     <ClInclude Include="include\input\mouse.h" />
     <ClInclude Include="include\log.h" />
@@ -111,19 +114,22 @@
   <ItemGroup>
     <ClCompile Include="src\core\logmanager.cpp" />
     <ClCompile Include="src\core\window.cpp" />
+    <ClCompile Include="src\graphics\helpers.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\texture.cpp" />
+    <ClCompile Include="src\graphics\vertex.cpp" />
     <ClCompile Include="src\input\keyboard.cpp" />
     <ClCompile Include="src\input\mouse.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\shaders\fragment.glsl" />
+    <None Include="src\shaders\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\external\glad\glad.vcxproj">
       <Project>{DD62977C-C999-980D-7286-7E105E9C140F}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\shaders\fragment.glsl" />
-    <None Include="src\shaders\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
