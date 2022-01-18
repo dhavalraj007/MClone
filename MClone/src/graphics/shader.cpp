@@ -2,8 +2,12 @@
 #include<fstream>
 #include<sstream>
 #include"graphics/shader.h"
+#include"graphics/helpers.h"
 #include"log.h"
 #include"glad/glad.h"
+#include"glm/glm.hpp"
+#include"glm/gtc/matrix_transform.hpp"
+#include"glm/gtc/type_ptr.hpp"
 
 namespace graphics
 {
@@ -103,32 +107,59 @@ namespace graphics
 	void Shader::setUniformInt(const std::string& name, int val)
 	{
 		bind();
-		glUniform1i(getUniformLocation(name), val);
+		glUniform1i(getUniformLocation(name), val);		MCLONE_CHECK_GL_ERROR
 
 	}
 
 	void Shader::setUniformFloat(const std::string& name, float val)
 	{
 		bind();
-		glUniform1f(getUniformLocation(name), val);
+		glUniform1f(getUniformLocation(name), val);		MCLONE_CHECK_GL_ERROR
 	}
 
 	void Shader::setUniformFloat2(const std::string& name, float val1, float val2)
 	{
 		bind();
-		glUniform2f(getUniformLocation(name), val1, val2);
+		glUniform2f(getUniformLocation(name), val1, val2);		MCLONE_CHECK_GL_ERROR
+	}
+
+	void Shader::setUniformFloat2(const std::string& name, const glm::vec2& val)
+	{
+		setUniformFloat2(name, val.x, val.y);
 	}
 
 	void Shader::setUniformFloat3(const std::string& name, float val1, float val2, float val3)
 	{
 		bind();
-		glUniform3f(getUniformLocation(name), val1, val2, val3);
+		glUniform3f(getUniformLocation(name), val1, val2, val3);		MCLONE_CHECK_GL_ERROR
+	}
+
+	void Shader::setUniformFloat3(const std::string& name, const glm::vec3& val)
+	{
+		setUniformFloat3(name, val.x, val.y, val.z);
 	}
 
 	void Shader::setUniformFloat4(const std::string& name, float val1, float val2, float val3, float val4)
 	{
 		bind();
-		glUniform4f(getUniformLocation(name), val1, val2, val3, val4);
+		glUniform4f(getUniformLocation(name), val1, val2, val3, val4);		MCLONE_CHECK_GL_ERROR
+	}
+
+	void Shader::setUniformFloat4(const std::string& name, const glm::vec4& val)
+	{
+		setUniformFloat4(name, val.x, val.y, val.z, val.w);
+	}
+
+	void Shader::setUniformMat3(const std::string& name, const glm::mat3& mat)
+	{
+		bind();
+		glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat));		MCLONE_CHECK_GL_ERROR
+	}
+
+	void Shader::setUniformMat4(const std::string& name, const glm::mat4& mat)
+	{
+		bind();
+		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat));		MCLONE_CHECK_GL_ERROR
 	}
 
 	int Shader::getUniformLocation(const std::string& name)

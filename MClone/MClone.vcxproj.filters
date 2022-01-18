@@ -57,6 +57,8 @@
     <ClInclude Include="include\log.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils\pngPacker.h" />
+    <ClInclude Include="include\graphics\camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\logmanager.cpp">
@@ -86,6 +88,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\pngPacker.cpp" />
+    <ClCompile Include="src\graphics\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragment.glsl">

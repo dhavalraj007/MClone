@@ -21,7 +21,7 @@ namespace graphics
 
 	RawVertexBuffer::~RawVertexBuffer()
 	{
-		glDeleteBuffers(1, &m_Vbo);	MCLONE_CHECK_GL_ERROR;
+		glDeleteBuffers(1, &m_Vbo);	//MCLONE_CHECK_GL_ERROR;
 	}
 
 	void RawVertexBuffer::setLayout(const std::vector<uint32_t>& layout)
@@ -67,7 +67,7 @@ namespace graphics
 	VertexArray::~VertexArray()
 	{
 		m_Vbos.clear();
-		glDeleteVertexArrays(1, &m_Vao);	MCLONE_CHECK_GL_ERROR;
+		glDeleteVertexArrays(1, &m_Vao);
 	}
 
 	void VertexArray::pushBuffer(std::unique_ptr<RawVertexBuffer> vbo)
