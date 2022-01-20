@@ -46,6 +46,7 @@ namespace core
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_WarpMouseInWindow(m_Window, props.w/2, props.h/2);
 
 		m_Context = SDL_GL_CreateContext(m_Window);
 

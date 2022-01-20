@@ -10,6 +10,7 @@ namespace input
 	std::array<bool, Mouse::ButtonCount> Mouse::m_LastButtonState;
 	void Mouse::Init()
 	{
+		//SDL_SetRelativeMouseMode(SDL_TRUE);
 		std::fill(m_CurrButtonState.begin(), m_CurrButtonState.end(), false);
 		std::fill(m_LastButtonState.begin(), m_LastButtonState.end(), false);
 	}
