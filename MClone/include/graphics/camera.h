@@ -52,6 +52,7 @@ namespace graphics
 		inline void setOrientation(const glm::vec3& orientation);
 	public:
 		float speed;
+		float sensitivity = 0.4f;
 	private:
 		glm::vec3 m_orientation;//camera front
 		float yaw, pitch;

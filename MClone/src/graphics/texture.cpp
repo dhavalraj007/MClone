@@ -20,7 +20,7 @@ namespace graphics
 		, m_Height(0)
 		, m_NumOfChannels(0)
 		, m_Pixels(nullptr)
-		, m_Filter(TextureFiltering::Linear)
+		, m_Filter(TextureFiltering::Nearest)
 		, m_TexUnit(texUnit)
 	{
 		MCLONE_ASSERT(m_TexUnit > 0, "Texture Unit 0 is not available for User acess. - please use texture units >= 1");
@@ -54,7 +54,8 @@ namespace graphics
 		switch (filter)
 		{
 		case TextureFiltering::Nearest:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); MCLONE_CHECK_GL_ERROR
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR); MCLONE_CHECK_GL_ERROR
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); MCLONE_CHECK_GL_ERROR
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); MCLONE_CHECK_GL_ERROR
 				break;
 		case TextureFiltering::Linear:
@@ -101,6 +102,7 @@ namespace graphics
 		if (m_Pixels && channelFormat != 0)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, channelFormat, m_Width, m_Height, 0, channelFormat, GL_UNSIGNED_BYTE, m_Pixels); MCLONE_CHECK_GL_ERROR;
+			glGenerateMipmap(GL_TEXTURE_2D);
 			setFilter(m_Filter);
 			MCLONE_TRACE("Loaded {}-Channel Texture :{}", m_NumOfChannels, m_Path);
 		}

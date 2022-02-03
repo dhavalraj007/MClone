@@ -46,7 +46,7 @@
     <IntDir>..\bin-obj\Debug\MClone\</IntDir>
     <TargetName>MClone</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;$(IncludePath)</IncludePath>
+    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;..\external\yaml\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,7 +54,7 @@
     <IntDir>..\bin-obj\Release\MClone\</IntDir>
     <TargetName>MClone</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;$(IncludePath)</IncludePath>
+    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;..\external\yaml\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -103,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="include\core\logmanager.h" />
     <ClInclude Include="include\core\window.h" />
+    <ClInclude Include="include\game\chunk.h" />
     <ClInclude Include="include\graphics\camera.h" />
     <ClInclude Include="include\graphics\helpers.h" />
     <ClInclude Include="include\graphics\shader.h" />
@@ -116,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="src\core\logmanager.cpp" />
     <ClCompile Include="src\core\window.cpp" />
+    <ClCompile Include="src\game\chunk.cpp" />
     <ClCompile Include="src\graphics\camera.cpp" />
     <ClCompile Include="src\graphics\helpers.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
@@ -124,6 +126,7 @@
     <ClCompile Include="src\input\keyboard.cpp" />
     <ClCompile Include="src\input\mouse.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\test\yamltest.cpp" />
     <ClCompile Include="src\utils\pngPacker.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +136,9 @@
   <ItemGroup>
     <ProjectReference Include="..\external\glad\glad.vcxproj">
       <Project>{DD62977C-C999-980D-7286-7E105E9C140F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\external\yaml\yaml.vcxproj">
+      <Project>{7814A17C-644B-A20D-0D38-8810F94D1E0F}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

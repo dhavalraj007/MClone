@@ -76,7 +76,7 @@ namespace graphics
 			changed = true;
 		}
 
-		float sensitivity = 0.1f;
+		
 		float xOffset;
 		float yOffset;
 		if (t_firstMouse)
@@ -93,6 +93,10 @@ namespace graphics
 		
 		yaw += (float)xOffset;
 		pitch += (float)yOffset;
+		if (pitch > 89.0f)
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
 
 		setOrientation(
 			{

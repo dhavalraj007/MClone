@@ -1,22 +1,29 @@
 #include<filesystem>
-#include "utils\pngPacker.h"
+#include<fstream>
+#include "utils/pngPacker.h"
 #include "log.h"
-
+#include"Yaml-cpp/yaml.h"
 #include"stb/stb_image.h"
 #include"stb/stb_image_write.h"
 
 namespace pngPacker
 {
+	struct texLocation
+	{
+		int currX, currY, width, height;
+		std::string name;
+	};
+
 	void packPngs(const char* inputPath, const char* outputPath)
 	{
-
+		std::vector<texLocation> texLocations;
 		int numFiles = 0;
 		for (auto image : std::filesystem::directory_iterator(inputPath))
 		{
 			numFiles++;
 		}
 		MCLONE_INFO("{}", numFiles);
-
+	
 
 		int outMaxWidth = 32 * (int)sqrt(numFiles);
 		int currX = 0, currY = 0;
@@ -42,6 +49,9 @@ namespace pngPacker
 				currLineHeight = currHeight;
 				outPxData.resize((currY + currLineHeight) * outMaxWidth);
 			}
+
+			//save uvs to later save them in yaml file
+			texLocations.push_back({ currX,currY,currWidth,currHeight,image.path().stem().string() });
 
 			for (int y = 0; y < currHeight; y++)
 			{
@@ -74,6 +84,28 @@ namespace pngPacker
 
 		stbi_write_png(outputPath, outMaxWidth, outMaxHeight, 4, &outPxData[0], outMaxWidth * 4);
 
+		YAML::Node texFormat;
+		texFormat["BLOCKS"];
+		for (auto location : texLocations)
+		{
+			YAML::Node uvs;
+			uvs["uvs"]["0"].push_back((float)location.currX / outMaxWidth);
+			uvs["uvs"]["0"].push_back((float)location.currY / outMaxHeight);
 
+			uvs["uvs"]["1"].push_back((float)(location.currX + location.width) / outMaxWidth);
+			uvs["uvs"]["1"].push_back((float)location.currY / outMaxHeight);
+
+			uvs["uvs"]["2"].push_back((float)(location.currX + location.width) / outMaxWidth);
+			uvs["uvs"]["2"].push_back((float)(location.currY + location.height) / outMaxHeight);
+									  
+			uvs["uvs"]["3"].push_back((float)location.currX / outMaxWidth);
+			uvs["uvs"]["3"].push_back((float)(location.currY + location.height) / outMaxHeight);
+
+			texFormat["BLOCKS"][location.name] = uvs;
+		}
+
+		std::ofstream fout("textureFormat.yaml");
+		fout << texFormat;
+		fout.close();
 	}
 }

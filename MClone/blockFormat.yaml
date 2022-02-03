@@ -1,0 +1,5 @@
+grass_block:
+  id: 1
+  side: grass_block_side
+  top: grass_block_top
+  bottom: dirt

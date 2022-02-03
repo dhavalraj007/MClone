@@ -45,6 +45,7 @@ namespace core
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_WarpMouseInWindow(m_Window, props.w/2, props.h/2);
 
@@ -58,6 +59,7 @@ namespace core
 		gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 		glViewport(0, 0, props.w, props.h);
 		glClearColor(props.clearColor.r, props.clearColor.g, props.clearColor.b, props.clearColor.a);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void Window::shutdown()
@@ -74,7 +76,7 @@ namespace core
 
 	void Window::clearScreen()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	}
 
 	void Window::swapbuffers()
