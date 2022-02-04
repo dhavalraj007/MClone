@@ -89,17 +89,23 @@ namespace pngPacker
 		for (auto location : texLocations)
 		{
 			YAML::Node uvs;
+			//bottom left
 			uvs["uvs"]["0"].push_back((float)location.currX / outMaxWidth);
-			uvs["uvs"]["0"].push_back((float)location.currY / outMaxHeight);
+			uvs["uvs"]["0"].push_back(1.f- ((float)(location.currY + location.height) / outMaxHeight));
 
-			uvs["uvs"]["1"].push_back((float)(location.currX + location.width) / outMaxWidth);
-			uvs["uvs"]["1"].push_back((float)location.currY / outMaxHeight);
-
+			//top left
+			uvs["uvs"]["1"].push_back((float)location.currX / outMaxWidth);
+			uvs["uvs"]["1"].push_back(1.f-((float)location.currY / outMaxHeight));
+			
+			//bottom right
 			uvs["uvs"]["2"].push_back((float)(location.currX + location.width) / outMaxWidth);
-			uvs["uvs"]["2"].push_back((float)(location.currY + location.height) / outMaxHeight);
+			uvs["uvs"]["2"].push_back(1.f-((float)(location.currY + location.height) / outMaxHeight));
+			
+			//top right
+			uvs["uvs"]["3"].push_back((float)(location.currX + location.width) / outMaxWidth);
+			uvs["uvs"]["3"].push_back(1.f-((float)location.currY / outMaxHeight));
 									  
-			uvs["uvs"]["3"].push_back((float)location.currX / outMaxWidth);
-			uvs["uvs"]["3"].push_back((float)(location.currY + location.height) / outMaxHeight);
+
 
 			texFormat["BLOCKS"][location.name] = uvs;
 		}

@@ -86,6 +86,7 @@ namespace graphics
 
 	void VertexArray::setElements(const std::vector<uint32_t>& elements)
 	{
+		m_elements = elements;
 		m_ElementCount = (uint32_t)elements.size();
 		glBindVertexArray(m_Vao);	MCLONE_CHECK_GL_ERROR;
 		glGenBuffers(1, &m_Ebo);	MCLONE_CHECK_GL_ERROR;

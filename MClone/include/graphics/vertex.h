@@ -148,5 +148,6 @@ namespace graphics
 		uint32_t m_Vao, m_Ebo;
 		uint32_t m_AttributeCount;
 		std::vector<std::unique_ptr<RawVertexBuffer>> m_Vbos;
+		std::vector<uint32_t> m_elements;
 	};
 }

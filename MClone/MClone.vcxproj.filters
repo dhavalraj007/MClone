@@ -130,5 +130,7 @@
     <None Include="src\shaders\vertex.glsl">
       <Filter>src\shaders</Filter>
     </None>
+    <None Include="textureFormat.yaml" />
+    <None Include="blockFormat.yaml" />
   </ItemGroup>
 </Project>

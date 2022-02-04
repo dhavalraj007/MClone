@@ -40,9 +40,9 @@ int main()
 	pngPacker::packPngs("res/Block/", "texturePack.png");
 
 
-	auto chunk_vao = game::createChunk({ 0.f,0.f,0.f }, 20, 100, 100);
-	auto chunk2_vao = game::createChunk({ 50.f,0.f,0.f }, 20, 100, 100);
-	graphics::Texture texture("tex1", "res/block/grass_block_side.png", 1);
+	auto chunk_vao = game::createChunk( 100,100,1);
+	//auto chunk2_vao = game::createChunk(20, 100, 100);
+	graphics::Texture texture("tex1", "texturePack.png", 1);
 	graphics::Shader shader("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
 	texture.bind();
@@ -50,10 +50,10 @@ int main()
 
 	graphics::FlyCamera cam({ 0.0f,0.f,2.f }, window.getProps().aspectRatio);
 	cam.setZFar(1000.f);
-	cam.speed += 0.1f;
+	cam.speed = 0.001f;
 	shader.setUniformMat4("uView", cam.getViewMatrix());
 	shader.setUniformMat4("uProj", cam.getProjMatrix());
-	
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (!window.m_ShouldClose)
 	{
 		window.pollEvents();
@@ -71,8 +71,9 @@ int main()
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		chunk_vao->bind();
 		glDrawArrays(GL_TRIANGLES, 0, chunk_vao->getVertexCount());
-		chunk2_vao->bind();
-		glDrawArrays(GL_TRIANGLES, 0, chunk2_vao->getVertexCount());
+		//glDrawElements(GL_TRIANGLES,chunk_vao->getElementCount(),GL_UNSIGNED_INT,0);
+		/*chunk2_vao->bind();
+		glDrawArrays(GL_TRIANGLES, 0, chunk2_vao->getVertexCount());*/
 		window.swapbuffers();
 	}
 	window.shutdown();

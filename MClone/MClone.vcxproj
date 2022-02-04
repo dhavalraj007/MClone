@@ -130,8 +130,10 @@
     <ClCompile Include="src\utils\pngPacker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="blockFormat.yaml" />
     <None Include="src\shaders\fragment.glsl" />
     <None Include="src\shaders\vertex.glsl" />
+    <None Include="textureFormat.yaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\external\glad\glad.vcxproj">
