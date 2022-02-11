@@ -3,106 +3,192 @@
 #include"game/chunk.h"
 namespace game
 {
+	constexpr int CHUNK_WIDTH = 16;
+	constexpr int CHUNK_HEIGHT = 384;
+	constexpr int CHUNK_BREADTH = 16;
+
 	static std::unordered_map<std::string, int> nameToIdMap;
-	static YAML::Node blockFormatNode;
-	static YAML::Node textureFormatNode;
-	void loadBlockFormats()
+	static std::vector<blockFormat> blockFormats;
+	static std::unordered_map<std::string, textureFormat> textureFormats;
+	static std::vector<int> blockIds;
+
+	// load name textureformat from mainNode to std::unordered_map<std::string,textureFormat> textureFormats
+	void loadTextureFormat(YAML::Node mainNode, std::string name)
 	{
-		blockFormatNode = YAML::LoadFile("blockFormat.Yaml");
+		textureFormat tf;
+		tf.name = name;
+		tf.uvs[0][0] = mainNode["BLOCKS"][name]["uvs"][0][0].as<float>();
+		tf.uvs[0][1] = mainNode["BLOCKS"][name]["uvs"][0][1].as<float>();
+		tf.uvs[1][0] = mainNode["BLOCKS"][name]["uvs"][1][0].as<float>();
+		tf.uvs[1][1] = mainNode["BLOCKS"][name]["uvs"][1][1].as<float>();
+		tf.uvs[2][0] = mainNode["BLOCKS"][name]["uvs"][2][0].as<float>();
+		tf.uvs[2][1] = mainNode["BLOCKS"][name]["uvs"][2][1].as<float>();
+		tf.uvs[3][0] = mainNode["BLOCKS"][name]["uvs"][3][0].as<float>();
+		tf.uvs[3][1] = mainNode["BLOCKS"][name]["uvs"][3][1].as<float>();
+		textureFormats[name] = tf;
+	}
+
+	void loadFormats()
+	{
+		YAML::Node blockFormatNode = YAML::LoadFile("blockFormat.Yaml");
+		YAML::Node textureFormatNode = YAML::LoadFile("textureFormat.yaml");
+		blockFormats.resize(100);
 		for (auto Nids : blockFormatNode["BLOCKS"])
 		{
-			nameToIdMap[Nids.second["name"].as<std::string>()] = Nids.first.as<int>();
+			int id = Nids.first.as<int>();
+			MCLONE_ASSERT(id != 0, "0 ID is reserved for NULL_BLOCK.");
+
+			blockFormats[id].name = Nids.second["name"].as<std::string>();
+			blockFormats[id].side = Nids.second["side"].as<std::string>();
+			blockFormats[id].top = Nids.second["top"].as<std::string>();
+			blockFormats[id].bottom = Nids.second["bottom"].as<std::string>();
+			blockFormats[id].isTransparent = Nids.second["isTransparent"].as<bool>();
+
+			loadTextureFormat(textureFormatNode, blockFormats[id].side);
+			loadTextureFormat(textureFormatNode, blockFormats[id].top);
+			loadTextureFormat(textureFormatNode, blockFormats[id].bottom);
+			nameToIdMap[blockFormats[id].name] = id;
 		}
 	}
-	void loadTextureFormats()
+
+	inline int to1DArray(int x, int y, int z)
 	{
-		textureFormatNode = YAML::LoadFile("textureFormat.yaml");
+		if (x >= CHUNK_WIDTH || x < 0 || y >= CHUNK_HEIGHT || y < 0 || z >= CHUNK_BREADTH || z < 0)
+			return -1;
+		return (x + y * CHUNK_WIDTH + z * (CHUNK_WIDTH * CHUNK_HEIGHT));
 	}
 
-	std::shared_ptr<graphics::VertexArray> createChunk(int width, int height, int breadth)
+	bool isBlockNull(int x, int y, int z)
 	{
-		loadBlockFormats();
-		loadTextureFormats();
+		int ret = to1DArray(x, y, z);
+		return ret == -1 ?
+			true
+			: (blockIds[ret] == 0);
+	}
+
+	void genBlockIds()
+	{
+		blockIds = std::vector<int>(CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_BREADTH, 0);
+		for (int x = 0; x < CHUNK_WIDTH; x++)
+		{
+			for (int y = 0; y < CHUNK_HEIGHT; y++)
+			{
+				for (int z = 0; z < CHUNK_BREADTH; z++)
+				{
+					if(y<20)
+					blockIds[to1DArray(x, y, z)] = 2;
+					else
+					blockIds[to1DArray(x, y, z)] = 1;
+				}
+			}
+		}
+	}
+	std::shared_ptr<graphics::VertexArray> createChunk()
+	{
+		loadFormats();
 		std::shared_ptr<graphics::VertexArray> chunk_vao = std::make_shared<graphics::VertexArray>();
 		std::vector<float> vertexData;
-		//std::vector<uint32_t> elements(width * height * breadth * 36);
-			//std::vector<float> verts;
 
-		std::string id("1");
-		for (int x = 0; x < width; x++)
+		genBlockIds();
+		for (int x = 0; x < CHUNK_WIDTH; x++)
 		{
-			for (int y = 0; y < height; y++)
+			for (int y = 0; y < CHUNK_HEIGHT; y++)
 			{
-				for (int z = 0; z < breadth; z++)
+				for (int z = 0; z < CHUNK_BREADTH; z++)
 				{
-					if (y < 10)
-						id = "2";
-					else
-						id = "1";
-					auto uvsSideNode = textureFormatNode["BLOCKS"][blockFormatNode["BLOCKS"][id]["side"].as<std::string>()]["uvs"];
-					auto uvsTopNode = textureFormatNode["BLOCKS"][blockFormatNode["BLOCKS"][id]["top"].as<std::string>()]["uvs"];
-					auto uvsBottomNode = textureFormatNode["BLOCKS"][blockFormatNode["BLOCKS"][id]["bottom"].as<std::string>()]["uvs"];
+					int blockId = blockIds[to1DArray(x, y, z)];
+					textureFormat texformSide = textureFormats[blockFormats[blockId].side];
+					textureFormat texformTop = textureFormats[blockFormats[blockId].top];
+					textureFormat texformBottom = textureFormats[blockFormats[blockId].bottom];
 
 					//00 - 0
 					//01 - 1
 					//10 - 2
 					//11 - 3
 
-					vertexData.insert(vertexData.end(),
-						{
-							//pos					 					  //uvs
+					//back	032301
+					if (isBlockNull(x, y, z - 1) || blockFormats[blockIds[to1DArray(x, y, z - 1)]].isTransparent)
+					{
+						vertexData.insert(vertexData.end(),
+							{
+								-0.5f + x, -0.5f + y, -0.5f + z,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								 0.5f + x,  0.5f + y, -0.5f + z,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								 0.5f + x, -0.5f + y, -0.5f + z,  texformSide.uvs[2][0],texformSide.uvs[2][1],
+								 0.5f + x,  0.5f + y, -0.5f + z,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x, -0.5f + y, -0.5f + z,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x,  0.5f + y, -0.5f + z,  texformSide.uvs[1][0],texformSide.uvs[1][1],
+							});
+					}
+					//front 023310
+					if (isBlockNull(x, y, z + 1) || blockFormats[blockIds[to1DArray(x, y, z + 1)]].isTransparent)
+					{
+						vertexData.insert(vertexData.end(),
+							{
+								-0.5f + x, -0.5f + y,  0.5f + z,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								 0.5f + x, -0.5f + y,  0.5f + z,  texformSide.uvs[2][0],texformSide.uvs[2][1],
+								 0.5f + x,  0.5f + y,  0.5f + z,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								 0.5f + x,  0.5f + y,  0.5f + z,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x,  0.5f + y,  0.5f + z,  texformSide.uvs[1][0],texformSide.uvs[1][1],
+								-0.5f + x, -0.5f + y,  0.5f + z,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+							});
+					}
+					//left 310023
+					if (isBlockNull(x - 1, y, z) || blockFormats[blockIds[to1DArray(x - 1, y, z)]].isTransparent)
+					{
+						vertexData.insert(vertexData.end(),
+							{
+								-0.5f + x,  0.5f + y,  0.5f + z, texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x,  0.5f + y, -0.5f + z, texformSide.uvs[1][0],texformSide.uvs[1][1],
+								-0.5f + x, -0.5f + y, -0.5f + z, texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x, -0.5f + y, -0.5f + z, texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x, -0.5f + y,  0.5f + z, texformSide.uvs[2][0],texformSide.uvs[2][1],
+								-0.5f + x,  0.5f + y,  0.5f + z, texformSide.uvs[3][0],texformSide.uvs[3][1],
+							});
+					}
+					//right 301032
+					if (isBlockNull(x + 1, y, z) || blockFormats[blockIds[to1DArray(x + 1, y, z)]].isTransparent)
+					{
+						vertexData.insert(vertexData.end(),
+							{
+							 0.5f + x,  0.5f + y,  0.5f + z,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+							 0.5f + x, -0.5f + y, -0.5f + z,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+							 0.5f + x,  0.5f + y, -0.5f + z,  texformSide.uvs[1][0],texformSide.uvs[1][1],
+							 0.5f + x, -0.5f + y, -0.5f + z,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+							 0.5f + x,  0.5f + y,  0.5f + z,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+							 0.5f + x, -0.5f + y,  0.5f + z,  texformSide.uvs[2][0],texformSide.uvs[2][1],
+							});
+					}
+					//bottom 132201
+					if (isBlockNull(x, y - 1, z) || blockFormats[blockIds[to1DArray(x, y - 1, z)]].isTransparent)
+					{
+						vertexData.insert(vertexData.end(),
+							{
+							-0.5f + x, -0.5f + y, -0.5f + z,  texformBottom.uvs[1][0],texformBottom.uvs[1][1],
+							 0.5f + x, -0.5f + y, -0.5f + z,  texformBottom.uvs[3][0],texformBottom.uvs[3][1],
+							 0.5f + x, -0.5f + y,  0.5f + z,  texformBottom.uvs[2][0],texformBottom.uvs[2][1],
+							 0.5f + x, -0.5f + y,  0.5f + z,  texformBottom.uvs[2][0],texformBottom.uvs[2][1],
+							-0.5f + x, -0.5f + y,  0.5f + z,  texformBottom.uvs[0][0],texformBottom.uvs[0][1],
+							-0.5f + x, -0.5f + y, -0.5f + z,  texformBottom.uvs[1][0],texformBottom.uvs[1][1],
+							});
+					}
 
-							//back
-							-0.5f + x, -0.5f + y, -0.5f + z,  uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-							 0.5f + x, -0.5f + y, -0.5f + z,  uvsSideNode["2"][0].as<float>(),uvsSideNode["2"][1].as<float>(),
-							 0.5f + x,  0.5f + y, -0.5f + z,  uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-							 0.5f + x,  0.5f + y, -0.5f + z,  uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-							-0.5f + x,  0.5f + y, -0.5f + z,  uvsSideNode["1"][0].as<float>(),uvsSideNode["1"][1].as<float>(),
-							-0.5f + x, -0.5f + y, -0.5f + z,  uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-
-							//front
-							-0.5f + x, -0.5f + y,  0.5f + z,  uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-							 0.5f + x, -0.5f + y,  0.5f + z,  uvsSideNode["2"][0].as<float>(),uvsSideNode["2"][1].as<float>(),
-							 0.5f + x,  0.5f + y,  0.5f + z,  uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-							 0.5f + x,  0.5f + y,  0.5f + z,  uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-							-0.5f + x,  0.5f + y,  0.5f + z,  uvsSideNode["1"][0].as<float>(),uvsSideNode["1"][1].as<float>(),
-							-0.5f + x, -0.5f + y,  0.5f + z,  uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-
-							//left
-							-0.5f + x,  0.5f + y,  0.5f + z,   uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-							-0.5f + x,  0.5f + y, -0.5f + z,   uvsSideNode["1"][0].as<float>(),uvsSideNode["1"][1].as<float>(),
-							-0.5f + x, -0.5f + y, -0.5f + z,   uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-							-0.5f + x, -0.5f + y, -0.5f + z,   uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-							-0.5f + x, -0.5f + y,  0.5f + z,   uvsSideNode["2"][0].as<float>(),uvsSideNode["2"][1].as<float>(),
-							-0.5f + x,  0.5f + y,  0.5f + z,   uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-
-							//right
-							 0.5f + x,  0.5f + y,  0.5f + z,   uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-							 0.5f + x,  0.5f + y, -0.5f + z,   uvsSideNode["1"][0].as<float>(),uvsSideNode["1"][1].as<float>(),
-							 0.5f + x, -0.5f + y, -0.5f + z,   uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-							 0.5f + x, -0.5f + y, -0.5f + z,   uvsSideNode["0"][0].as<float>(),uvsSideNode["0"][1].as<float>(),
-							 0.5f + x, -0.5f + y,  0.5f + z,   uvsSideNode["2"][0].as<float>(),uvsSideNode["2"][1].as<float>(),
-							 0.5f + x,  0.5f + y,  0.5f + z,   uvsSideNode["3"][0].as<float>(),uvsSideNode["3"][1].as<float>(),
-
-							 //bottom
-							-0.5f + x, -0.5f + y, -0.5f + z,  uvsBottomNode["1"][0].as<float>(),uvsBottomNode["1"][1].as<float>(),
-							 0.5f + x, -0.5f + y, -0.5f + z,  uvsBottomNode["3"][0].as<float>(),uvsBottomNode["3"][1].as<float>(),
-							 0.5f + x, -0.5f + y,  0.5f + z,  uvsBottomNode["2"][0].as<float>(),uvsBottomNode["2"][1].as<float>(),
-							 0.5f + x, -0.5f + y,  0.5f + z,  uvsBottomNode["2"][0].as<float>(),uvsBottomNode["2"][1].as<float>(),
-							-0.5f + x, -0.5f + y,  0.5f + z,  uvsBottomNode["0"][0].as<float>(),uvsBottomNode["0"][1].as<float>(),
-							-0.5f + x, -0.5f + y, -0.5f + z,  uvsBottomNode["1"][0].as<float>(),uvsBottomNode["1"][1].as<float>(),
-
-							//top
-							-0.5f + x,  0.5f + y, -0.5f + z,  uvsTopNode["1"][0].as<float>(),uvsTopNode["1"][1].as<float>(),
-							 0.5f + x,  0.5f + y, -0.5f + z,  uvsTopNode["3"][0].as<float>(),uvsTopNode["3"][1].as<float>(),
-							 0.5f + x,  0.5f + y,  0.5f + z,  uvsTopNode["2"][0].as<float>(),uvsTopNode["2"][1].as<float>(),
-							 0.5f + x,  0.5f + y,  0.5f + z,  uvsTopNode["2"][0].as<float>(),uvsTopNode["2"][1].as<float>(),
-							-0.5f + x,  0.5f + y,  0.5f + z,  uvsTopNode["0"][0].as<float>(),uvsTopNode["0"][1].as<float>(),
-							-0.5f + x,  0.5f + y, -0.5f + z,  uvsTopNode["1"][0].as<float>(),uvsTopNode["1"][1].as<float>(),
-						});
+					//top 123210
+					if (isBlockNull(x, y + 1, z) || blockFormats[blockIds[to1DArray(x, y + 1, z)]].isTransparent)
+					{
+						vertexData.insert(vertexData.end(),
+							{
+							-0.5f + x,  0.5f + y, -0.5f + z,  texformTop.uvs[1][0],texformTop.uvs[1][1],
+							 0.5f + x,  0.5f + y,  0.5f + z,  texformTop.uvs[2][0],texformTop.uvs[2][1],
+							 0.5f + x,  0.5f + y, -0.5f + z,  texformTop.uvs[3][0],texformTop.uvs[3][1],
+							 0.5f + x,  0.5f + y,  0.5f + z,  texformTop.uvs[2][0],texformTop.uvs[2][1],
+							-0.5f + x,  0.5f + y, -0.5f + z,  texformTop.uvs[1][0],texformTop.uvs[1][1],
+							-0.5f + x,  0.5f + y,  0.5f + z,  texformTop.uvs[0][0],texformTop.uvs[0][1],
+							});
+					}
 				}
 			}
 		}
+		MCLONE_TRACE("{}", vertexData.size());
 
 		MCLONE_CREATE_VERTEX_BUFFER(vb, float);
 		vb->setLayout({ 3,2 });

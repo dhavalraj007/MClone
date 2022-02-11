@@ -37,10 +37,10 @@ int main()
 	test::YamlWrite();
 	input::Mouse::Init();
 	input::Keyboard::Init();
-	pngPacker::packPngs("res/Block/", "texturePack.png");
+	//pngPacker::packPngs("res/Block/", "texturePack.png");
 
 
-	auto chunk_vao = game::createChunk( 100,100,1);
+	auto chunk_vao = game::createChunk();
 	//auto chunk2_vao = game::createChunk(20, 100, 100);
 	graphics::Texture texture("tex1", "texturePack.png", 1);
 	graphics::Shader shader("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
@@ -53,6 +53,7 @@ int main()
 	cam.speed = 0.001f;
 	shader.setUniformMat4("uView", cam.getViewMatrix());
 	shader.setUniformMat4("uProj", cam.getProjMatrix());
+	glEnable(GL_CULL_FACE);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (!window.m_ShouldClose)
 	{

@@ -4,8 +4,10 @@ BLOCKS:
     side: grass_block_side
     top: green_concrete_powder
     bottom: dirt
+    isTransparent: false
   2:
     name: sand
     side: sand
     top: sand
     bottom: sand
+    isTransparent: false

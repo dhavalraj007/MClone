@@ -5,10 +5,14 @@
 
 namespace game
 {
+	//0 is NULL_BLOCK
 	struct blockFormat
 	{
 		int id;
 		std::string name,side, top, bottom;
+		bool isTransparent;
+		blockFormat()
+			:id(0), name("null"), side(""), top(""), bottom(""), isTransparent(true) {}
 	};
 
 	struct textureFormat
@@ -21,5 +25,5 @@ namespace game
 	void loadTextureFormats();
 
 	
-	std::shared_ptr<graphics::VertexArray> createChunk(int width, int height, int breadth);
+	std::shared_ptr<graphics::VertexArray> createChunk();
 }

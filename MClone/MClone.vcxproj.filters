@@ -133,4 +133,7 @@
     <None Include="textureFormat.yaml" />
     <None Include="blockFormat.yaml" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\test\Text.txt" />
+  </ItemGroup>
 </Project>
