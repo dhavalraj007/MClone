@@ -101,11 +101,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\engine.h" />
     <ClInclude Include="include\core\logmanager.h" />
     <ClInclude Include="include\core\window.h" />
     <ClInclude Include="include\game\chunk.h" />
+    <ClInclude Include="include\game\chunkSystem.h" />
     <ClInclude Include="include\graphics\camera.h" />
     <ClInclude Include="include\graphics\helpers.h" />
+    <ClInclude Include="include\graphics\mipTexture.h" />
     <ClInclude Include="include\graphics\shader.h" />
     <ClInclude Include="include\graphics\texture.h" />
     <ClInclude Include="include\graphics\vertex.h" />
@@ -115,11 +118,14 @@
     <ClInclude Include="include\utils\pngPacker.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\engine.cpp" />
     <ClCompile Include="src\core\logmanager.cpp" />
     <ClCompile Include="src\core\window.cpp" />
     <ClCompile Include="src\game\chunk.cpp" />
+    <ClCompile Include="src\game\chunkSystem.cpp" />
     <ClCompile Include="src\graphics\camera.cpp" />
     <ClCompile Include="src\graphics\helpers.cpp" />
+    <ClCompile Include="src\graphics\mipTexture.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\vertex.cpp" />
@@ -144,7 +150,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\test\Text.txt" />
+    <Text Include="src\test\todo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

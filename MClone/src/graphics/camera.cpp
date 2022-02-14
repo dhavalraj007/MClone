@@ -52,8 +52,16 @@ namespace graphics
 		: FlyCamera(pos, aspectRatio, {0.f, 0.f, -1.f}, 0.0001f)
 	{}
 
-	void FlyCamera::handleInput()
+	void FlyCamera::handleInput(float dt)
 	{
+		if (input::Keyboard::Key(input::Keys::MKEY_LSHIFT))
+		{
+			speed =  dt*fastspeed;
+		}
+		else
+		{
+			speed = dt*midspeed;
+		}
 		bool changed = false;
 		if (input::Keyboard::Key(input::Keys::MKEY_W))
 		{

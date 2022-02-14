@@ -20,7 +20,8 @@ namespace graphics
 		, m_Height(0)
 		, m_NumOfChannels(0)
 		, m_Pixels(nullptr)
-		, m_Filter(TextureFiltering::Nearest)
+		, m_MagFilter(TextureFiltering::Nearest)
+		, m_MinFilter(TextureFiltering::Nearest)
 		, m_TexUnit(texUnit)
 	{
 		MCLONE_ASSERT(m_TexUnit > 0, "Texture Unit 0 is not available for User acess. - please use texture units >= 1");
@@ -47,24 +48,41 @@ namespace graphics
 		m_Pixels = nullptr;
 	}
 
-	void Texture::setFilter(TextureFiltering filter)
+	void Texture::setFilter(bool mag, TextureFiltering filter)
 	{
 		glActiveTexture(GL_TEXTURE0 + m_TexUnit);
 		glBindTexture(GL_TEXTURE_2D, m_Id); MCLONE_CHECK_GL_ERROR;
-		switch (filter)
+		if (mag)
 		{
-		case TextureFiltering::Nearest:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR); MCLONE_CHECK_GL_ERROR
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); MCLONE_CHECK_GL_ERROR
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); MCLONE_CHECK_GL_ERROR
+			m_MagFilter = filter;
+			switch (filter)
+			{
+			case TextureFiltering::Nearest:
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); MCLONE_CHECK_GL_ERROR
+					break;
+			case TextureFiltering::Linear:
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); MCLONE_CHECK_GL_ERROR
+					break;
+			default:
 				break;
-		case TextureFiltering::Linear:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); MCLONE_CHECK_GL_ERROR
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); MCLONE_CHECK_GL_ERROR
-				break;
-		default:
-			break;
+			}
 		}
+		else
+		{
+			m_MinFilter = filter;
+			switch (filter)
+			{
+			case TextureFiltering::Nearest:
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR); MCLONE_CHECK_GL_ERROR
+					break;
+			case TextureFiltering::Linear:
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); MCLONE_CHECK_GL_ERROR
+					break;
+			default:
+				break;
+			}
+		}
+		
 		glBindTexture(GL_TEXTURE_2D, 0); MCLONE_CHECK_GL_ERROR;
 	}
 
@@ -84,7 +102,7 @@ namespace graphics
 		glGenTextures(1, &m_Id); MCLONE_CHECK_GL_ERROR;
 		glActiveTexture(GL_TEXTURE0 + m_TexUnit);
 		glBindTexture(GL_TEXTURE_2D, m_Id); MCLONE_CHECK_GL_ERROR;
-
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 5);
 		GLenum channelFormat = 0;
 		if (m_NumOfChannels == 3)
 		{
@@ -102,8 +120,10 @@ namespace graphics
 		if (m_Pixels && channelFormat != 0)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, channelFormat, m_Width, m_Height, 0, channelFormat, GL_UNSIGNED_BYTE, m_Pixels); MCLONE_CHECK_GL_ERROR;
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 5);
 			glGenerateMipmap(GL_TEXTURE_2D);
-			setFilter(m_Filter);
+			setFilter(true,m_MagFilter);
+			setFilter(false,m_MinFilter);
 			MCLONE_TRACE("Loaded {}-Channel Texture :{}", m_NumOfChannels, m_Path);
 		}
 		else
@@ -118,7 +138,8 @@ namespace graphics
 			m_Height = 4;
 			m_NumOfChannels = 3;
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_FLOAT, pixels); MCLONE_CHECK_GL_ERROR;
-			setFilter(TextureFiltering::Nearest);
+			setFilter(true,TextureFiltering::Nearest);
+			setFilter(false,TextureFiltering::Nearest);
 			MCLONE_WARN("Unable to Load Texture : {} - loading checkerboard pattern", m_Path);
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);

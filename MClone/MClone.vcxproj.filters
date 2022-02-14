@@ -81,6 +81,9 @@
     <ClInclude Include="include\utils\pngPacker.h">
       <Filter>include\utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\engine.h" />
+    <ClInclude Include="include\graphics\mipTexture.h" />
+    <ClInclude Include="include\game\chunkSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\logmanager.cpp">
@@ -122,6 +125,9 @@
     <ClCompile Include="src\utils\pngPacker.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\engine.cpp" />
+    <ClCompile Include="src\graphics\mipTexture.cpp" />
+    <ClCompile Include="src\game\chunkSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragment.glsl">
@@ -134,6 +140,6 @@
     <None Include="blockFormat.yaml" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\test\Text.txt" />
+    <Text Include="src\test\todo.txt" />
   </ItemGroup>
 </Project>

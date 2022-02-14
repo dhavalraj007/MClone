@@ -48,12 +48,15 @@ namespace graphics
 	public:
 		FlyCamera(const glm::vec3& pos, float aspectRatio);
 		FlyCamera(const glm::vec3& pos, float aspectRatio,const glm::vec3& orientation,float _speed);
-		void handleInput();	//todo: add delta time
+		void handleInput(float dt);	//todo: add delta time
 		inline void setOrientation(const glm::vec3& orientation);
 	public:
-		float speed;
+		float fastspeed = 10.f;
+		float midspeed = 5.f;
+
 		float sensitivity = 0.4f;
 	private:
+		float speed;
 		glm::vec3 m_orientation;//camera front
 		float yaw, pitch;
 		bool t_firstMouse=true;
