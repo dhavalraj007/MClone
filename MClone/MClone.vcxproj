@@ -46,7 +46,7 @@
     <IntDir>..\bin-obj\Debug\MClone\</IntDir>
     <TargetName>MClone</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;..\external\yaml\include;$(IncludePath)</IncludePath>
+    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;..\external\yaml\include;..\external\perlinNoise\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,7 +54,7 @@
     <IntDir>..\bin-obj\Release\MClone\</IntDir>
     <TargetName>MClone</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;..\external\yaml\include;$(IncludePath)</IncludePath>
+    <IncludePath>include;..\external\sdl2\include;..\external\spdlog\include;..\external\glad\include;..\external\glm\include;..\external\stb\include;..\external\yaml\include;..\external\perlinNoise\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,9 +148,6 @@
     <ProjectReference Include="..\external\yaml\yaml.vcxproj">
       <Project>{7814A17C-644B-A20D-0D38-8810F94D1E0F}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\test\todo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

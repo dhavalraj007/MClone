@@ -18,6 +18,7 @@ externals["glad"] = "external/glad"
 externals["glm"] = "external/glm"
 externals["stb"] = "external/stb"
 externals["yaml"] = "external/yaml"
+externals["perlinNoise"] = "external/perlinNoise"
 
 -- process glad before anything else
 include "external/glad"
@@ -47,7 +48,8 @@ project "MClone"
         "%{externals.glad}/include",
         "%{externals.glm}/include",
         "%{externals.stb}/include",
-        "%{externals.yaml}/include"
+        "%{externals.yaml}/include",
+        "%{externals.perlinNoise}/include"
     }
 
     libdirs

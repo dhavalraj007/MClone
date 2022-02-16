@@ -45,6 +45,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\engine.h">
+      <Filter>include\core</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\logmanager.h">
       <Filter>include\core</Filter>
     </ClInclude>
@@ -54,10 +57,16 @@
     <ClInclude Include="include\game\chunk.h">
       <Filter>include\game</Filter>
     </ClInclude>
+    <ClInclude Include="include\game\chunkSystem.h">
+      <Filter>include\game</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\camera.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\helpers.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\mipTexture.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\shader.h">
@@ -81,11 +90,11 @@
     <ClInclude Include="include\utils\pngPacker.h">
       <Filter>include\utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\engine.h" />
-    <ClInclude Include="include\graphics\mipTexture.h" />
-    <ClInclude Include="include\game\chunkSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\engine.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
     <ClCompile Include="src\core\logmanager.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
@@ -95,10 +104,16 @@
     <ClCompile Include="src\game\chunk.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\chunkSystem.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
     <ClCompile Include="src\graphics\camera.cpp">
       <Filter>src\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\helpers.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\mipTexture.cpp">
       <Filter>src\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\shader.cpp">
@@ -125,9 +140,6 @@
     <ClCompile Include="src\utils\pngPacker.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\engine.cpp" />
-    <ClCompile Include="src\graphics\mipTexture.cpp" />
-    <ClCompile Include="src\game\chunkSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragment.glsl">
@@ -136,10 +148,7 @@
     <None Include="src\shaders\vertex.glsl">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="textureFormat.yaml" />
     <None Include="blockFormat.yaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\test\todo.txt" />
+    <None Include="textureFormat.yaml" />
   </ItemGroup>
 </Project>

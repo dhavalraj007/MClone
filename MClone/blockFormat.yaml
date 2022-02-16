@@ -11,3 +11,27 @@ BLOCKS:
     top: sand
     bottom: sand
     isTransparent: false
+  3:
+    name: dirt
+    side: dirt
+    top: dirt
+    bottom: dirt
+    isTransparent: false
+  4:
+    name: green_concrete_powder
+    side: green_concrete_powder
+    top: green_concrete_powder
+    bottom: green_concrete_powder
+    isTransparent: false  
+  5:
+    name: stone
+    side: stone
+    top: stone
+    bottom: stone
+    isTransparent: false
+  6:
+    name: bedrock
+    side: bedrock
+    top: bedrock
+    bottom: bedrock
+    isTransparent: false

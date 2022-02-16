@@ -35,7 +35,8 @@ namespace game
 		std::vector<Chunk> chunks;
 	public:
 		ChunkSystem();
-		void addChunk(float posX, float posY, float posZ, IDEmitterFunc IDEmitter = defaultIDEmitter);
+		void addChunk(int posX, int posZ);
+		void render();
 	private:
 		void loadFormats();
 		void loadTextureFormat(YAML::Node mainNode, std::string name);

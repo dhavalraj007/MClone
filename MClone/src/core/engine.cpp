@@ -49,7 +49,13 @@ namespace core
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;
-		chunkSystem.addChunk(1.f, 0.f, 0.f,IdEmitter);
+		for (int z = -8; z < 8; z++)
+		{
+			for (int x = -8; x < 8; x++)
+			{
+				chunkSystem.addChunk(x,z);
+			}
+		}
 		graphics::Texture texture("tex1", "texturePack0.png", 1);
 
 
@@ -59,12 +65,13 @@ namespace core
 		texture.bind();
 		shader.setUniformInt(texture.getName(), texture.getTexUnit());
 
-		graphics::FlyCamera cam({ 0.0f,0.f,17.f }, m_window.getProps().aspectRatio);
+		graphics::FlyCamera cam({ 0.0f,385.f,0.f }, m_window.getProps().aspectRatio);
+		cam.fastspeed = 50.f;
 		cam.setZFar(1000.f);
 		shader.setUniformMat4("uView", cam.getViewMatrix());
 		shader.setUniformMat4("uProj", cam.getProjMatrix());
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
+		//glEnable(GL_BLEND);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		float deltaTime, lastFrameTime = 0;
@@ -75,7 +82,7 @@ namespace core
 			currTime = SDL_GetTicks() * 0.001f;
 			deltaTime = currTime - lastFrameTime;
 			lastFrameTime = currTime;
-			MCLONE_TRACE("{}", deltaTime);
+			//MCLONE_TRACE("{}", deltaTime);
 
 			m_window.pollEvents();
 			m_window.clearScreen();
@@ -89,12 +96,7 @@ namespace core
 			shader.setUniformMat4("uView", cam.getViewMatrix());
 			shader.setUniformMat4("uProj", cam.getProjMatrix());
 
-			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			chunkSystem.chunks[0].vao->bind();
-			glDrawArrays(GL_TRIANGLES, 0, chunkSystem.chunks[0].vao->getVertexCount());
-			//glDrawElements(GL_TRIANGLES,chunk_vao->getElementCount(),GL_UNSIGNED_INT,0);
-			/*chunk2_vao->bind();
-			glDrawArrays(GL_TRIANGLES, 0, chunk2_vao->getVertexCount());*/
+			chunkSystem.render();
 			m_window.swapbuffers();
 		}
 	}

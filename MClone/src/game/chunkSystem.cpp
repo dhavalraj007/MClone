@@ -3,6 +3,8 @@
 #include"graphics/vertex.h"
 #include"glm/glm.hpp"
 #include"game/chunk.h"
+#include"glad/glad.h"
+
 
 namespace game
 {
@@ -53,11 +55,17 @@ namespace game
 		loadFormats();
 	}
 
-	void ChunkSystem::addChunk(float posX, float posY, float posZ,IDEmitterFunc IDEmitter )
+	
+
+	void ChunkSystem::addChunk(int posX,int posZ)
 	{
-		Chunk chunk(IDEmitter);
-		chunk.position = { posX,posY,posZ };
-		std::shared_ptr<graphics::VertexArray> chunk_vao = std::make_shared<graphics::VertexArray>();
+		Chunk chunk({ posX,0.0f,posZ });
+		MCLONE_TRACE("{},{}", posX, posZ);
+		chunk.createData();
+
+		int worldPosX = posX*chunk.CHUNK_WIDTH;
+		int worldPosZ = posZ*chunk.CHUNK_BREADTH;
+
 		std::vector<float> vertexData;
 
 		for (int x = 0; x < chunk.CHUNK_WIDTH; x++)
@@ -66,7 +74,10 @@ namespace game
 			{
 				for (int z = 0; z < chunk.CHUNK_BREADTH; z++)
 				{
-					int blockId = chunk.internalBlocks[chunk.to1DArray(x, y, z)].id;
+					int blockId = chunk.getBlockAt(x,y,z).id;
+					if (blockId == 0)	//nullblock
+						continue;
+
 					textureFormat texformSide = textureFormats[blockFormats[blockId].side];
 					textureFormat texformTop = textureFormats[blockFormats[blockId].top];
 					textureFormat texformBottom = textureFormats[blockFormats[blockId].bottom];
@@ -81,12 +92,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-								-0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
-								 0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
-								 0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[2][0],texformSide.uvs[2][1],
-								 0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
-								-0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
-								-0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[1][0],texformSide.uvs[1][1],
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[2][0],texformSide.uvs[2][1],
+								 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[1][0],texformSide.uvs[1][1],
 							});
 					}
 					//front 023310
@@ -94,12 +105,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-								-0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
-								 0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[2][0],texformSide.uvs[2][1],
-								 0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
-								 0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
-								-0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[1][0],texformSide.uvs[1][1],
-								-0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+								 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[2][0],texformSide.uvs[2][1],
+								 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[1][0],texformSide.uvs[1][1],
+								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
 							});
 					}
 					//left 310023
@@ -107,12 +118,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-								-0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ, texformSide.uvs[3][0],texformSide.uvs[3][1],
-								-0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ, texformSide.uvs[1][0],texformSide.uvs[1][1],
-								-0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ, texformSide.uvs[0][0],texformSide.uvs[0][1],
-								-0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ, texformSide.uvs[0][0],texformSide.uvs[0][1],
-								-0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ, texformSide.uvs[2][0],texformSide.uvs[2][1],
-								-0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ, texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ, texformSide.uvs[3][0],texformSide.uvs[3][1],
+								-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ, texformSide.uvs[1][0],texformSide.uvs[1][1],
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ, texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ, texformSide.uvs[0][0],texformSide.uvs[0][1],
+								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ, texformSide.uvs[2][0],texformSide.uvs[2][1],
+								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ, texformSide.uvs[3][0],texformSide.uvs[3][1],
 							});
 					}
 					//right 301032
@@ -120,12 +131,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-							 0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
-							 0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
-							 0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[1][0],texformSide.uvs[1][1],
-							 0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
-							 0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
-							 0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformSide.uvs[2][0],texformSide.uvs[2][1],
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+							 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[1][0],texformSide.uvs[1][1],
+							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformSide.uvs[0][0],texformSide.uvs[0][1],
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[3][0],texformSide.uvs[3][1],
+							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformSide.uvs[2][0],texformSide.uvs[2][1],
 							});
 					}
 					//bottom 132201
@@ -133,26 +144,25 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-							-0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformBottom.uvs[1][0],texformBottom.uvs[1][1],
-							 0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformBottom.uvs[3][0],texformBottom.uvs[3][1],
-							 0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformBottom.uvs[2][0],texformBottom.uvs[2][1],
-							 0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformBottom.uvs[2][0],texformBottom.uvs[2][1],
-							-0.5f + x + posX, -0.5f + y + posY,  0.5f + z + posZ,  texformBottom.uvs[0][0],texformBottom.uvs[0][1],
-							-0.5f + x + posX, -0.5f + y + posY, -0.5f + z + posZ,  texformBottom.uvs[1][0],texformBottom.uvs[1][1],
+							-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformBottom.uvs[1][0],texformBottom.uvs[1][1],
+							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformBottom.uvs[3][0],texformBottom.uvs[3][1],
+							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformBottom.uvs[2][0],texformBottom.uvs[2][1],
+							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformBottom.uvs[2][0],texformBottom.uvs[2][1],
+							-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  texformBottom.uvs[0][0],texformBottom.uvs[0][1],
+							-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  texformBottom.uvs[1][0],texformBottom.uvs[1][1],
 							});
 					}
-
 					//top 123210
 					if (chunk.isBlockNull(x, y + 1, z) || blockFormats[chunk.internalBlocks[chunk.to1DArray(x, y + 1, z)].id].isTransparent)
 					{
 						vertexData.insert(vertexData.end(),
 							{
-							-0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformTop.uvs[1][0],texformTop.uvs[1][1],
-							 0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformTop.uvs[2][0],texformTop.uvs[2][1],
-							 0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformTop.uvs[3][0],texformTop.uvs[3][1],
-							 0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformTop.uvs[2][0],texformTop.uvs[2][1],
-							-0.5f + x + posX,  0.5f + y + posY, -0.5f + z + posZ,  texformTop.uvs[1][0],texformTop.uvs[1][1],
-							-0.5f + x + posX,  0.5f + y + posY,  0.5f + z + posZ,  texformTop.uvs[0][0],texformTop.uvs[0][1],
+							-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformTop.uvs[1][0],texformTop.uvs[1][1],
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformTop.uvs[2][0],texformTop.uvs[2][1],
+							 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformTop.uvs[3][0],texformTop.uvs[3][1],
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformTop.uvs[2][0],texformTop.uvs[2][1],
+							-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  texformTop.uvs[1][0],texformTop.uvs[1][1],
+							-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  texformTop.uvs[0][0],texformTop.uvs[0][1],
 							});
 					}
 				}
@@ -164,9 +174,16 @@ namespace game
 		vb->setLayout({ 3,2 });
 		vb->pushVertices(vertexData);
 		vb->upload(false);
-		chunk_vao->pushBuffer(std::move(vb));
-		chunk_vao->upload();
-		chunk.vao = chunk_vao;
+		chunk.vao->pushBuffer(std::move(vb));
+		chunk.vao->upload();
 		chunks.push_back(std::move(chunk));
+	}
+	void ChunkSystem::render()
+	{
+		for (auto& chunk : chunks)
+		{
+			chunk.vao->bind();
+			glDrawArrays(GL_TRIANGLES, 0, chunk.vao->getVertexCount());
+		}
 	}
 }

@@ -2,7 +2,9 @@
 #include"graphics/vertex.h"
 #include"glm/glm.hpp"
 #include"yaml-cpp/yaml.h"
+#include"perlinNoise/perlinNoise.hpp"
 
+#include<iostream>
 namespace game
 {
 	//typedef int(*IDEmitterFunc)(int, int, int);
@@ -16,11 +18,14 @@ namespace game
 		int8_t rotation;
 		int32_t padding;
 	};
-	static internalBlock nullBlock = { 0,0,0,0 };
+	
 	
 	static IDEmitterFunc defaultIDEmitter = [](int x, int y, int z) {
 		return 1;	// grassBlock
 	};
+
+
+
 	class Chunk
 	{
 	public:
@@ -31,8 +36,10 @@ namespace game
 		const int CHUNK_BREADTH = 16;
 		std::vector<internalBlock> internalBlocks;
 	public:
-		Chunk(IDEmitterFunc IDEmitter = defaultIDEmitter);
+		Chunk(const glm::vec3 pos);
+		void createData();
 
+		const internalBlock& getBlockAt(int x, int y, int z);
 		inline int to1DArray(int x, int y, int z)
 		{
 			if (x >= CHUNK_WIDTH || x < 0 || y >= CHUNK_HEIGHT || y < 0 || z >= CHUNK_BREADTH || z < 0)
@@ -47,8 +54,11 @@ namespace game
 				: (internalBlocks[ret].id == 0); //else if the id is 0 then its null else it is not
 		}
 	private:
-
+		int IDEmitter(int x, int y, int z);
 	private:
+		bool isBlocksInit=false;
+		//perlin
+		const siv::PerlinNoise perlin{678};
 
 	};
 
