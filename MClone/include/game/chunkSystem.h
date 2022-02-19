@@ -28,9 +28,10 @@ namespace game
 
 	class ChunkSystem
 	{
+		//todo: add ID based textures to eliminate unorderded_map
 		std::unordered_map<std::string, int> nameToIdMap;
 		std::vector<blockFormat> blockFormats;
-		std::unordered_map<std::string, textureFormat> textureFormats;
+		std::unordered_map<std::string, textureFormat> textureFormats;		
 	public:
 		std::vector<Chunk> chunks;
 	public:

@@ -39,13 +39,6 @@ namespace core
 		m_logManager.shutdown();
 	}
 
-	game::IDEmitterFunc IdEmitter = [](int x, int y, int z) {
-		if (y < 10)
-			return 2;
-		else
-			return 1;
-	};
-
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;

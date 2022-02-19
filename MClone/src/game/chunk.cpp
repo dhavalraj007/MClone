@@ -1,10 +1,12 @@
 #include"graphics/vertex.h"
 #include"glm/glm.hpp"
 #include"game/chunk.h"
+#include"perlinNoise/perlinNoise.hpp"
+#include<fstream>
 
 namespace game
 {
-	static internalBlock nullBlock = { 0,0,0,0 };
+	static internalBlock nullBlock;
 
 	Chunk::Chunk(const glm::vec3 pos)
 		:position(pos)
@@ -12,20 +14,70 @@ namespace game
 		vao = std::make_shared<graphics::VertexArray>();
 	}
 
-	void Chunk::createData()
+	void Chunk::createData(uint32_t seed)
 	{
+		static siv::PerlinNoise perlin{seed};
+		float worldChunkX = float(position.x * CHUNK_WIDTH);
+		float worldChunkZ = float(position.z * CHUNK_BREADTH);
+
+		static float freq = 8;
+		static float fx = freq / (16.f * 4.f * 10.f);
+		static float fy = freq / (16.f * 4.f * 10.f);
+
 		internalBlocks = std::vector<internalBlock>(CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_BREADTH, nullBlock);
+		//deserialize("res/data");
 		for (int x = 0; x < CHUNK_WIDTH; x++)
 		{
-			for (int y = 0; y < CHUNK_HEIGHT; y++)
+			for (int z = 0; z < CHUNK_BREADTH; z++)
 			{
-				for (int z = 0; z < CHUNK_BREADTH; z++)
+				int maxHeight = (int)(perlin.normalizedOctave2D_01((x + worldChunkX) * fx, (z + worldChunkZ) * fy, 8) * 255.0);
+				int maxHeightStone = (int)(perlin.normalizedOctave2D_01((x + worldChunkX) * fx, (z + worldChunkZ) * fy, 8) * 127.0);
+				for (int y = 0; y < CHUNK_HEIGHT; y++)
 				{
-					internalBlocks[to1DArray(x, y, z)].id = IDEmitter(x, y, z);
+					if (y == 0)
+						internalBlocks[to1DArray(x, y, z)].id = 6;	//bedrock
+					else if (y < maxHeightStone)
+						internalBlocks[to1DArray(x, y, z)].id = 5;	//stone
+					else if (y < maxHeight)
+						internalBlocks[to1DArray(x, y, z)].id = 3;	//dirt
+					else if (y == maxHeight)
+						internalBlocks[to1DArray(x, y, z)].id = 1;	//grass
+					else
+						internalBlocks[to1DArray(x, y, z)].id = 0;	//null block
+
+					//internalBlocks[to1DArray(x, y, z)].id = IDEmitter(x, y, z);
 				}
 			}
 		}
 		isBlocksInit = true;
+
+		//serialize("res/data");
+	}
+
+	void Chunk::serialize(const std::string& worldPath)
+	{
+		std::string filePath = worldPath + "/" + std::to_string(position.x) + "_" + std::to_string(position.z) + ".bin";
+		std::fstream file;
+		file.open(filePath, std::ios_base::out | std::ios_base::binary);
+		MCLONE_ASSERT(file.is_open(), "Error: FILE is not opened!");
+		if (file.is_open())
+		{
+			file.write(reinterpret_cast<char*>(&internalBlocks[0]), internalBlocks.size()*sizeof(internalBlock));
+		}
+		file.close();
+	}
+	
+	void Chunk::deserialize(const std::string& worldPath)
+	{
+		std::string filePath = worldPath + "/" + std::to_string(position.x) + "_" + std::to_string(position.z) + ".bin";
+		std::fstream file(filePath, std::ios::in || std::ios::binary);
+		MCLONE_ASSERT(file.is_open(), "Error: FILE is not opened!");
+		if (file.is_open())
+		{
+			for(int i=0;i< CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_BREADTH;i++)
+				internalBlocks.emplace_back(file);
+			/*file.read(reinterpret_cast<char*>(&internalBlocks), CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_BREADTH*sizeof(internalBlock));*/
+		}
 	}
 
 	const internalBlock& Chunk::getBlockAt(int x, int y, int z)
@@ -37,19 +89,4 @@ namespace game
 			return nullBlock;
 	}
 
-	int Chunk::IDEmitter(int x, int y, int z)
-	{
-		float worldChunkX = position.x * CHUNK_WIDTH;
-		float worldChunkZ = position.z * CHUNK_BREADTH;
-
-		int maxHeight = (int)(perlin.octave2D_01((x+worldChunkX)*0.005f, (z+worldChunkZ)*0.005f, 8)*255.0); // 0-255.f
-		if (y == 0)
-			return 6;	//bedrock
-		if (y < maxHeight)
-			return 3;	//dirt
-		if (y == maxHeight)
-			return 1;	//grass
-		else
-			return 0;	//null block
-	}
 }
