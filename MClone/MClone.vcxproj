@@ -106,6 +106,7 @@
     <ClInclude Include="include\core\window.h" />
     <ClInclude Include="include\game\chunk.h" />
     <ClInclude Include="include\game\chunkSystem.h" />
+    <ClInclude Include="include\game\lightSource.h" />
     <ClInclude Include="include\graphics\camera.h" />
     <ClInclude Include="include\graphics\helpers.h" />
     <ClInclude Include="include\graphics\mipTexture.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="src\core\window.cpp" />
     <ClCompile Include="src\game\chunk.cpp" />
     <ClCompile Include="src\game\chunkSystem.cpp" />
+    <ClCompile Include="src\game\lightSource.cpp" />
     <ClCompile Include="src\graphics\camera.cpp" />
     <ClCompile Include="src\graphics\helpers.cpp" />
     <ClCompile Include="src\graphics\mipTexture.cpp" />
@@ -137,8 +139,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="blockFormat.yaml" />
-    <None Include="src\shaders\fragment.glsl" />
-    <None Include="src\shaders\vertex.glsl" />
+    <None Include="src\shaders\lightSourceFragment.glsl" />
+    <None Include="src\shaders\lightSourceVertex.glsl" />
+    <None Include="src\shaders\simpleFragment.glsl" />
+    <None Include="src\shaders\simpleVertex.glsl" />
+    <None Include="src\shaders\textureFragment.glsl" />
+    <None Include="src\shaders\lightingFragment.glsl" />
+    <None Include="src\shaders\lightingVertex.glsl" />
+    <None Include="src\shaders\textureVertex.glsl" />
     <None Include="textureFormat.yaml" />
   </ItemGroup>
   <ItemGroup>

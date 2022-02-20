@@ -16,7 +16,7 @@
 #include"graphics/camera.h"
 
 #include"game/chunkSystem.h"
-
+#include"game/lightSource.h"
 #include"utils/pngPacker.h"
 
 namespace core
@@ -42,27 +42,32 @@ namespace core
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;
-		for (int z = -8; z < 8; z++)
+		for (int z = -4; z < 4; z++)
 		{
-			for (int x = -8; x < 8; x++)
+			for (int x = -4; x < 4; x++)
 			{
 				chunkSystem.addChunk(x,z);
 			}
 		}
-		graphics::Texture texture("tex1", "texturePack0.png", 1);
 
 
+		game::LightSource lightSource({ 0.f,150.f,0.f }, { 1.f, 1.f, 1.f });
+		lightSource.setScale(5.f);
+		graphics::Shader lightingShader("src/shaders/lightingVertex.glsl", "src/shaders/lightingFragment.glsl");
 		
-		graphics::Shader shader("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
+
+		graphics::Texture texture("tex1", "texturePack0.png", 1);
 		texture.bind();
-		shader.setUniformInt(texture.getName(), texture.getTexUnit());
+		lightingShader.setUniformInt(texture.getName(), texture.getTexUnit());
+
+
 
 		graphics::FlyCamera cam({ 0.0f,385.f,0.f }, m_window.getProps().aspectRatio);
 		cam.fastspeed = 50.f;
 		cam.setZFar(1000.f);
-		shader.setUniformMat4("uView", cam.getViewMatrix());
-		shader.setUniformMat4("uProj", cam.getProjMatrix());
+		lightingShader.setUniformMat4("uView", cam.getViewMatrix());
+		lightingShader.setUniformMat4("uProj", cam.getProjMatrix());
 		glEnable(GL_CULL_FACE);
 		//glEnable(GL_BLEND);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -82,14 +87,33 @@ namespace core
 			input::Mouse::Update();
 			input::Keyboard::Update();
 
+
+			if (input::Keyboard::Key(input::Keys::MKEY_UP))
+				lightSource.setPos(lightSource.getPos() + glm::vec3{0.f, 1.f, 0.f});
+			if (input::Keyboard::Key(input::Keys::MKEY_DOWN))
+				lightSource.setPos(lightSource.getPos() + glm::vec3{ 0.f, -1.f, 0.f });
+			if (input::Keyboard::Key(input::Keys::MKEY_RIGHT))
+				lightSource.setPos(lightSource.getPos() + glm::vec3{ 1.f, 0.f, 0.f });
+			if (input::Keyboard::Key(input::Keys::MKEY_LEFT))
+				lightSource.setPos(lightSource.getPos() + glm::vec3{ -1.f, 0.f, 0.f });
+
+			lightingShader.setUniformFloat3("uLightPos", lightSource.getPos());
+			lightingShader.setUniformFloat3("uLightColor", lightSource.getColor());
+
+			lightSource.shader->bind();
+			lightSource.shader->setUniformMat4("uView", cam.getViewMatrix());
+			lightSource.shader->setUniformMat4("uProj", cam.getProjMatrix());
+			lightSource.render();
+
 			texture.bind();
-			shader.bind();
+			lightingShader.bind();
 
 			cam.handleInput(deltaTime);
-			shader.setUniformMat4("uView", cam.getViewMatrix());
-			shader.setUniformMat4("uProj", cam.getProjMatrix());
-
+			lightingShader.setUniformMat4("uView", cam.getViewMatrix());
+			lightingShader.setUniformMat4("uProj", cam.getProjMatrix());
 			chunkSystem.render();
+
+			
 			m_window.swapbuffers();
 		}
 	}

@@ -57,6 +57,15 @@ namespace game
 	}
 
 	
+	enum BlockFace 
+	{
+		BACK = 0,
+		FRONT = 1,
+		LEFT = 2,
+		RIGHT = 3,
+		BOTTOM = 4,
+		TOP = 5
+	};
 
 	void ChunkSystem::addChunk(int posX,int posZ)
 	{
@@ -68,6 +77,7 @@ namespace game
 		int worldPosZ = posZ*chunk.CHUNK_BREADTH;
 
 		std::vector<float> vertexData;
+
 
 		for (int x = 0; x < chunk.CHUNK_WIDTH; x++)
 		{
@@ -93,12 +103,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-								 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-								 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],
-								 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-								-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::BACK,
+								 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::BACK,
+								 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],BlockFace::BACK,
+								 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::BACK,
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::BACK,
+								-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],BlockFace::BACK
 							});
 					}
 					//front 023310
@@ -106,12 +116,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-								 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],
-								 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-								 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],
-								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
+								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::FRONT,
+								 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],BlockFace::FRONT,
+								 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::FRONT,
+								 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::FRONT,
+								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],BlockFace::FRONT,
+								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::FRONT
 							});
 					}
 					//left 310023
@@ -119,12 +129,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-								-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],
-								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],
-								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
+								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::LEFT,
+								-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],BlockFace::LEFT,
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::LEFT,
+								-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::LEFT,
+								-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],BlockFace::LEFT,
+								-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ, textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::LEFT
 							});
 					}
 					//right 301032
@@ -132,12 +142,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-							 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],
-							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],
-							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],
-							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::RIGHT,
+							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::RIGHT,
+							 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[1][0],textureFormats[blockFormats[blockId].side].uvs[1][1],BlockFace::RIGHT,
+							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[0][0],textureFormats[blockFormats[blockId].side].uvs[0][1],BlockFace::RIGHT,
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[3][0],textureFormats[blockFormats[blockId].side].uvs[3][1],BlockFace::RIGHT,
+							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].side].uvs[2][0],textureFormats[blockFormats[blockId].side].uvs[2][1],BlockFace::RIGHT
 							});
 					}
 					//bottom 132201
@@ -145,12 +155,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-							-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[1][0],textureFormats[blockFormats[blockId].bottom].uvs[1][1],
-							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[3][0],textureFormats[blockFormats[blockId].bottom].uvs[3][1],
-							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[2][0],textureFormats[blockFormats[blockId].bottom].uvs[2][1],
-							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[2][0],textureFormats[blockFormats[blockId].bottom].uvs[2][1],
-							-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[0][0],textureFormats[blockFormats[blockId].bottom].uvs[0][1],
-							-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[1][0],textureFormats[blockFormats[blockId].bottom].uvs[1][1],
+							-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[1][0],textureFormats[blockFormats[blockId].bottom].uvs[1][1],BlockFace::BOTTOM,
+							 0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[3][0],textureFormats[blockFormats[blockId].bottom].uvs[3][1],BlockFace::BOTTOM,
+							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[2][0],textureFormats[blockFormats[blockId].bottom].uvs[2][1],BlockFace::BOTTOM,
+							 0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[2][0],textureFormats[blockFormats[blockId].bottom].uvs[2][1],BlockFace::BOTTOM,
+							-0.5f + x + worldPosX, -0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[0][0],textureFormats[blockFormats[blockId].bottom].uvs[0][1],BlockFace::BOTTOM,
+							-0.5f + x + worldPosX, -0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].bottom].uvs[1][0],textureFormats[blockFormats[blockId].bottom].uvs[1][1],BlockFace::BOTTOM
 							});
 					}
 					//top 123210
@@ -158,12 +168,12 @@ namespace game
 					{
 						vertexData.insert(vertexData.end(),
 							{
-							-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[1][0],textureFormats[blockFormats[blockId].top].uvs[1][1],
-							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[2][0],textureFormats[blockFormats[blockId].top].uvs[2][1],
-							 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[3][0],textureFormats[blockFormats[blockId].top].uvs[3][1],
-							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[2][0],textureFormats[blockFormats[blockId].top].uvs[2][1],
-							-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[1][0],textureFormats[blockFormats[blockId].top].uvs[1][1],
-							-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[0][0],textureFormats[blockFormats[blockId].top].uvs[0][1],
+							-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[1][0],textureFormats[blockFormats[blockId].top].uvs[1][1],BlockFace::TOP,
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[2][0],textureFormats[blockFormats[blockId].top].uvs[2][1],BlockFace::TOP,
+							 0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[3][0],textureFormats[blockFormats[blockId].top].uvs[3][1],BlockFace::TOP,
+							 0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[2][0],textureFormats[blockFormats[blockId].top].uvs[2][1],BlockFace::TOP,
+							-0.5f + x + worldPosX,  0.5f + y  , -0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[1][0],textureFormats[blockFormats[blockId].top].uvs[1][1],BlockFace::TOP,
+							-0.5f + x + worldPosX,  0.5f + y  ,  0.5f + z + worldPosZ,  textureFormats[blockFormats[blockId].top].uvs[0][0],textureFormats[blockFormats[blockId].top].uvs[0][1],BlockFace::TOP
 							});
 					}
 				}
@@ -172,7 +182,7 @@ namespace game
 		MCLONE_TRACE("{}", vertexData.size());
 
 		MCLONE_CREATE_VERTEX_BUFFER(vb, float);
-		vb->setLayout({ 3,2 });
+		vb->setLayout({ 3,2,1});
 		vb->pushVertices(vertexData);
 		vb->upload(false);
 		chunk.vao->pushBuffer(std::move(vb));

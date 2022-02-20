@@ -90,6 +90,7 @@
     <ClInclude Include="include\utils\pngPacker.h">
       <Filter>include\utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\game\lightSource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\engine.cpp">
@@ -140,15 +141,22 @@
     <ClCompile Include="src\utils\pngPacker.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\lightSource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\fragment.glsl">
+    <None Include="src\shaders\textureFragment.glsl">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="src\shaders\vertex.glsl">
+    <None Include="src\shaders\textureVertex.glsl">
       <Filter>src\shaders</Filter>
     </None>
     <None Include="blockFormat.yaml" />
     <None Include="textureFormat.yaml" />
+    <None Include="src\shaders\lightingVertex.glsl" />
+    <None Include="src\shaders\lightingFragment.glsl" />
+    <None Include="src\shaders\simpleVertex.glsl" />
+    <None Include="src\shaders\simpleFragment.glsl" />
+    <None Include="src\shaders\lightSourceVertex.glsl" />
+    <None Include="src\shaders\lightSourceFragment.glsl" />
   </ItemGroup>
 </Project>
