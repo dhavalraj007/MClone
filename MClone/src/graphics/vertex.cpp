@@ -110,7 +110,14 @@ namespace graphics
 			for (auto& count : vbo->getLayout())
 			{
 				glEnableVertexAttribArray(attributeCount);
-				glVertexAttribPointer(attributeCount, count, static_cast<GLenum>(vbo->getGLtype()), GL_FALSE, vbo->getStride(), (void*)(intptr_t)offset);
+				if (vbo->isIntegralType())
+				{
+					glVertexAttribIPointer(attributeCount, count, static_cast<GLenum>(vbo->getGLtype()), vbo->getStride(), (void*)(intptr_t)offset);
+				}
+				else
+				{
+					glVertexAttribPointer(attributeCount, count, static_cast<GLenum>(vbo->getGLtype()), GL_FALSE, vbo->getStride(), (void*)(intptr_t)offset);
+				}
 				attributeCount++;
 				offset += count * vbo->getTypeSize();
 			}

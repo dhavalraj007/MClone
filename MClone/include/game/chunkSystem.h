@@ -33,11 +33,10 @@ namespace game
 		std::vector<blockFormat> blockFormats;
 		std::unordered_map<std::string, textureFormat> textureFormats;		
 	public:
-		std::vector<Chunk> chunks;
+		std::vector<std::shared_ptr<Chunk>> chunks;
 	public:
 		ChunkSystem();
-		void addChunk(int posX, int posZ);
-		void render();
+		void createDataForChunk(std::shared_ptr<Chunk> chunk);
 	private:
 		void loadFormats();
 		void loadTextureFormat(YAML::Node mainNode, std::string name);

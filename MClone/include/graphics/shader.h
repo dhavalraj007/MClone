@@ -15,6 +15,13 @@ namespace graphics
 		void unbind();
 
 		void setUniformInt(const std::string& name, int val);
+		void setUniformInt2(const std::string& name, int val1, int val2);
+		void setUniformInt2(const std::string& name, const glm::ivec2& val);
+		void setUniformInt3(const std::string& name, int val1, int val2, int val3);
+		void setUniformInt3(const std::string& name, const glm::ivec3& val);
+		void setUniformInt4(const std::string& name, int val1, int val2, int val3, int val4);
+		void setUniformInt4(const std::string& name, const glm::ivec4& val);
+		/////////////////////////////////////////
 		void setUniformFloat(const std::string& name, float val);
 		void setUniformFloat2(const std::string& name, float val1, float val2);
 		void setUniformFloat2(const std::string& name, const glm::vec2& val);

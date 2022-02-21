@@ -1,0 +1,23 @@
+vertex structure
+
+current :
+vec3 pos
+vec2 uv
+float face
+
+new:
+
+pos -> (0,16) , (0,256) , (0,16) -> index = x+z*17+y*(17*17) -> max index = 16+16*17 + 256*17*17 = 74272 -> 17 bits
+texID -> 0-(2^12-1) = 12 bits
+face -> 0-5 = 3 bits
+
+17+12+3
+=32bit uint
+
+0-16 = position  (0x1FFFF)
+17-28 = texID	(0x1FFE0000)
+29-31 = face	(0xE0000000)
+
+0000 0000 0000 0000   0000 0000 0000 0000 
+
+

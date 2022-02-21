@@ -31,6 +31,7 @@ namespace graphics
 		inline uint32_t getVertexCount() const { return m_VertexCount; }
 		inline uint32_t getStride()const { return m_Stride; }
 		inline uint32_t getGLtype()const { return GLtype; }
+		inline bool isIntegralType()const  { return m_isIntegrealType; }
 		inline std::vector<uint32_t> getLayout() const { return m_Layout; }
 
 		void setLayout(const std::vector<uint32_t>& layout);
@@ -50,6 +51,7 @@ namespace graphics
 		void* m_Data = nullptr;
 		uint32_t m_Size = 0;
 		uint32_t GLtype = 0;
+		bool m_isIntegrealType = false;
 	};
 
 	template<typename T>
@@ -74,8 +76,8 @@ namespace graphics
 			if constexpr (std::is_same<T, unsigned char>()) { GLtype = GLtypeUByte; }
 			if constexpr (std::is_same<T, short>()) { GLtype = GLtypeShort; }
 			if constexpr (std::is_same<T, unsigned short>()) { GLtype = GLtypeUShort; }
-			if constexpr (std::is_same<T, int>()) { GLtype = GLtypeInt; }
-			if constexpr (std::is_same<T, unsigned int>()) { GLtype = GLtypeUInt; }
+			if constexpr (std::is_same<T, int>()) { m_isIntegrealType = true; GLtype = GLtypeInt; }
+			if constexpr (std::is_same<T, unsigned int>()) { m_isIntegrealType = true; GLtype = GLtypeUInt; }
 			if constexpr (std::is_same<T, float>()) { GLtype = GLtypeFloat; }
 			if constexpr (std::is_same<T, double>()) { GLtype = GLtypeDouble; }
 		}

@@ -8,7 +8,7 @@ namespace game
 {
 	static internalBlock nullBlock;
 
-	Chunk::Chunk(const glm::vec3 pos)
+	Chunk::Chunk(const glm::ivec3 pos)
 		:position(pos)
 	{
 		vao = std::make_shared<graphics::VertexArray>();
@@ -21,8 +21,8 @@ namespace game
 		float worldChunkZ = float(position.z * CHUNK_BREADTH);
 
 		static float freq = 8;
-		static float fx = freq / (16.f * 4.f * 10.f);
-		static float fy = freq / (16.f * 4.f * 10.f);
+		static float fx = freq / (16.f * 4.f * 40.f);
+		static float fy = freq / (16.f * 4.f * 40.f);
 
 		internalBlocks = std::vector<internalBlock>(CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_BREADTH, nullBlock);
 		//deserialize("res/data");
@@ -30,8 +30,8 @@ namespace game
 		{
 			for (int z = 0; z < CHUNK_BREADTH; z++)
 			{
-				int maxHeight = (int)(perlin.normalizedOctave2D_01((x + worldChunkX) * fx, (z + worldChunkZ) * fy, 8) * 255.0);
-				int maxHeightStone = (int)(perlin.normalizedOctave2D_01((x + worldChunkX) * fx, (z + worldChunkZ) * fy, 8) * 127.0);
+				int maxHeight = (int)(perlin.normalizedOctave2D_01((x + worldChunkX) * fx, (z + worldChunkZ) * fy, 8) * CHUNK_HEIGHT);
+				int maxHeightStone = (int)(perlin.normalizedOctave2D_01((x + worldChunkX) * fx, (z + worldChunkZ) * fy, 8) * (CHUNK_HEIGHT/2));
 				for (int y = 0; y < CHUNK_HEIGHT; y++)
 				{
 					if (y == 0)

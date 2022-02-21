@@ -32,12 +32,12 @@ namespace game
 	public:
 		glm::ivec3 position;
 		std::shared_ptr<graphics::VertexArray> vao;
-		static const int CHUNK_WIDTH = 16;
-		static const int CHUNK_HEIGHT = 384;
-		static const int CHUNK_BREADTH = 16;
+		static const int CHUNK_WIDTH = 16;	//x
+		static const int CHUNK_HEIGHT = 255;	//y (dont fukin change this shit)
+		static const int CHUNK_BREADTH = 16; //z
 		std::vector<internalBlock> internalBlocks;
 	public:
-		Chunk(const glm::vec3 pos);
+		Chunk(const glm::ivec3 pos);
 		void createData(uint32_t seed);
 		//worldPath is the path where every bin file for every pos of chunk exists
 		void serialize(const std::string& worldPath);

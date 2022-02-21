@@ -159,4 +159,7 @@
     <None Include="src\shaders\lightSourceVertex.glsl" />
     <None Include="src\shaders\lightSourceFragment.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\test\notes.txt" />
+  </ItemGroup>
 </Project>

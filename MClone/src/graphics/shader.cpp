@@ -110,7 +110,39 @@ namespace graphics
 		glUniform1i(getUniformLocation(name), val);		MCLONE_CHECK_GL_ERROR
 
 	}
+	void Shader::setUniformInt2(const std::string& name, int val1, int val2)
+	{
+		bind();
+		glUniform2i(getUniformLocation(name), val1, val2);		MCLONE_CHECK_GL_ERROR
+	}
 
+	void Shader::setUniformInt2(const std::string& name, const glm::ivec2& val)
+	{
+		setUniformInt2(name, val.x, val.y);
+	}
+
+	void Shader::setUniformInt3(const std::string& name, int val1, int val2, int val3)
+	{
+		bind();
+		glUniform3i(getUniformLocation(name), val1, val2, val3);		MCLONE_CHECK_GL_ERROR
+	}
+
+	void Shader::setUniformInt3(const std::string& name, const glm::ivec3& val)
+	{
+		setUniformInt3(name, val.x, val.y, val.z);
+	}
+
+	void Shader::setUniformInt4(const std::string& name, int val1, int val2, int val3, int val4)
+	{
+		bind();
+		glUniform4i(getUniformLocation(name), val1, val2, val3, val4);		MCLONE_CHECK_GL_ERROR
+	}
+
+	void Shader::setUniformInt4(const std::string& name, const glm::ivec4& val)
+	{
+		setUniformInt4(name, val.x, val.y, val.z, val.w);
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 	void Shader::setUniformFloat(const std::string& name, float val)
 	{
 		bind();
@@ -149,6 +181,7 @@ namespace graphics
 	{
 		setUniformFloat4(name, val.x, val.y, val.z, val.w);
 	}
+
 
 	void Shader::setUniformMat3(const std::string& name, const glm::mat3& mat)
 	{

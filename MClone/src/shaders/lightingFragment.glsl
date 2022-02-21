@@ -1,8 +1,9 @@
 #version 410 core
 
-in vec2 texcoords;
+
 in vec3 fPos;
-flat in float fFace;
+flat in uint fFace;
+in vec2 texcoords;
 
 out vec4 FragColor;
 

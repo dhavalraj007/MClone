@@ -1,6 +1,0 @@
-engine abstraction - done
-miptexture abstraction - done
-delta time - done
-block data struct - done
-gen chunk at world coord and abstract the chunk (internalblocks) - done
-

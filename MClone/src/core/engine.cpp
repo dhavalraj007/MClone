@@ -42,16 +42,18 @@ namespace core
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;
-		for (int z = -4; z < 4; z++)
+
+		int gridSize = 8;
+		for (int z = -gridSize; z < gridSize; z++)
 		{
-			for (int x = -4; x < 4; x++)
+			for (int x = -gridSize; x < gridSize; x++)
 			{
-				chunkSystem.addChunk(x,z);
+				std::shared_ptr<game::Chunk> chunk = std::make_shared<game::Chunk>(glm::ivec3{ x,0,z });
+				chunkSystem.createDataForChunk(chunk);
 			}
 		}
 
-
-		game::LightSource lightSource({ 0.f,150.f,0.f }, { 1.f, 1.f, 1.f });
+		game::LightSource lightSource({ 0.f,200.f,0.f }, { 1.f, 1.f, 1.f });
 		lightSource.setScale(5.f);
 		graphics::Shader lightingShader("src/shaders/lightingVertex.glsl", "src/shaders/lightingFragment.glsl");
 		
@@ -97,8 +99,7 @@ namespace core
 			if (input::Keyboard::Key(input::Keys::MKEY_LEFT))
 				lightSource.setPos(lightSource.getPos() + glm::vec3{ -1.f, 0.f, 0.f });
 
-			lightingShader.setUniformFloat3("uLightPos", lightSource.getPos());
-			lightingShader.setUniformFloat3("uLightColor", lightSource.getColor());
+
 
 			lightSource.shader->bind();
 			lightSource.shader->setUniformMat4("uView", cam.getViewMatrix());
@@ -111,7 +112,15 @@ namespace core
 			cam.handleInput(deltaTime);
 			lightingShader.setUniformMat4("uView", cam.getViewMatrix());
 			lightingShader.setUniformMat4("uProj", cam.getProjMatrix());
-			chunkSystem.render();
+			lightingShader.setUniformFloat3("uLightPos", lightSource.getPos());
+			lightingShader.setUniformFloat3("uLightColor", lightSource.getColor());
+
+			for (auto chunk : chunkSystem.chunks)
+			{
+				chunk->vao->bind();
+				lightingShader.setUniformInt3("uChunkPos", chunk->position);
+				glDrawArrays(GL_TRIANGLES, 0, chunk->vao->getVertexCount());
+			}
 
 			
 			m_window.swapbuffers();
