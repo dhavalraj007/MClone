@@ -47,7 +47,7 @@ namespace core
 		game::ChunkSystem chunkSystem;
 		graphics::TextureArray texArray("texturePack0.png", 32, 32,1);
 
-		int gridSize = 5;
+		int gridSize = 10;
 		for (int z = -gridSize; z < gridSize; z++)
 		{
 			for (int x = -gridSize; x < gridSize; x++)
@@ -62,12 +62,6 @@ namespace core
 		graphics::Shader lightingShader("src/shaders/lightingVertex.glsl", "src/shaders/lightingFragment.glsl");
 		
 		lightingShader.setUniformInt("uTexArray", texArray.texUnit);
-
-		//graphics::TextureBuffer<float> textureBuffer();
-
-		/*graphics::Texture texture("tex1", "texturePack0.png", 1);
-		texture.bind();
-		lightingShader.setUniformInt(texture.getName(), texture.getTexUnit());*/
 
 
 
