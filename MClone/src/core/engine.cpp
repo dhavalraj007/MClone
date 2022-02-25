@@ -14,10 +14,13 @@
 #include"graphics/mipTexture.h"
 #include"graphics/shader.h"
 #include"graphics/camera.h"
+#include"graphics/Misc.h"
 
 #include"game/chunkSystem.h"
 #include"game/lightSource.h"
 #include"utils/pngPacker.h"
+
+
 
 namespace core
 {
@@ -42,8 +45,9 @@ namespace core
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;
+		graphics::TextureArray texArray("texturePack0.png", 32, 32,1);
 
-		int gridSize = 8;
+		int gridSize = 5;
 		for (int z = -gridSize; z < gridSize; z++)
 		{
 			for (int x = -gridSize; x < gridSize; x++)
@@ -57,11 +61,13 @@ namespace core
 		lightSource.setScale(5.f);
 		graphics::Shader lightingShader("src/shaders/lightingVertex.glsl", "src/shaders/lightingFragment.glsl");
 		
+		lightingShader.setUniformInt("uTexArray", texArray.texUnit);
 
+		//graphics::TextureBuffer<float> textureBuffer();
 
-		graphics::Texture texture("tex1", "texturePack0.png", 1);
+		/*graphics::Texture texture("tex1", "texturePack0.png", 1);
 		texture.bind();
-		lightingShader.setUniformInt(texture.getName(), texture.getTexUnit());
+		lightingShader.setUniformInt(texture.getName(), texture.getTexUnit());*/
 
 
 
@@ -106,7 +112,7 @@ namespace core
 			lightSource.shader->setUniformMat4("uProj", cam.getProjMatrix());
 			lightSource.render();
 
-			texture.bind();
+			texArray.bind();
 			lightingShader.bind();
 
 			cam.handleInput(deltaTime);

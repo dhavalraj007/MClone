@@ -35,6 +35,12 @@ namespace pngPacker
 			if (image.path().extension().string() != ".png")
 				continue;
 			uint8_t* currImageData = stbi_load(image.path().string().c_str(), &currWidth, &currHeight, &currNChannels, 4);
+			if (currHeight < 32 || currHeight<32)
+				continue;
+			if (currWidth != 32)
+				currWidth = 32;
+			if (currHeight != 32)
+				currHeight = 32;
 			if (!currImageData)
 				continue;
 			if (currX + currWidth > outMaxWidth)
@@ -84,6 +90,7 @@ namespace pngPacker
 
 		stbi_write_png(outputPath, outMaxWidth, outMaxHeight, 4, &outPxData[0], outMaxWidth * 4);
 
+		uint32_t id=0;
 		YAML::Node texFormat;
 		texFormat["BLOCKS"];
 		for (auto location : texLocations)
@@ -108,6 +115,7 @@ namespace pngPacker
 
 
 			texFormat["BLOCKS"][location.name] = uvs;
+			texFormat["BLOCKS"][location.name]["ID"] = id++;
 		}
 
 		std::ofstream fout("textureFormat.yaml");

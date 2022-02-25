@@ -110,6 +110,7 @@
     <ClInclude Include="include\graphics\camera.h" />
     <ClInclude Include="include\graphics\helpers.h" />
     <ClInclude Include="include\graphics\mipTexture.h" />
+    <ClInclude Include="include\graphics\Misc.h" />
     <ClInclude Include="include\graphics\shader.h" />
     <ClInclude Include="include\graphics\texture.h" />
     <ClInclude Include="include\graphics\vertex.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="src\graphics\camera.cpp" />
     <ClCompile Include="src\graphics\helpers.cpp" />
     <ClCompile Include="src\graphics\mipTexture.cpp" />
+    <ClCompile Include="src\graphics\misc.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\vertex.cpp" />

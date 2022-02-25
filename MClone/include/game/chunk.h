@@ -33,7 +33,7 @@ namespace game
 		glm::ivec3 position;
 		std::shared_ptr<graphics::VertexArray> vao;
 		static const int CHUNK_WIDTH = 16;	//x
-		static const int CHUNK_HEIGHT = 255;	//y (dont fukin change this shit)
+		static const int CHUNK_HEIGHT = 255;	//y (dont fukin increase this shit than 255)
 		static const int CHUNK_BREADTH = 16; //z
 		std::vector<internalBlock> internalBlocks;
 	public:
@@ -46,9 +46,13 @@ namespace game
 		const internalBlock& getBlockAt(int x, int y, int z);
 		inline int to1DArray(int x, int y, int z)
 		{
-			if (x >= CHUNK_WIDTH || x < 0 || y >= CHUNK_HEIGHT || y < 0 || z >= CHUNK_BREADTH || z < 0)
+			if(isOutOfBounds(x,y,z))
 				return -1;
 			return (x + y * CHUNK_WIDTH + z * (CHUNK_WIDTH * CHUNK_HEIGHT));
+		}
+		inline bool isOutOfBounds(int x, int y, int z)
+		{
+			return (x >= CHUNK_WIDTH || x < 0 || y >= CHUNK_HEIGHT || y < 0 || z >= CHUNK_BREADTH || z < 0);
 		}
 		inline bool isBlockNull(int x, int y, int z)
 		{

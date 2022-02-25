@@ -1,10 +1,12 @@
 #version 410 core
 layout (location = 0) in uint aData;
-layout (location = 1) in vec2 aTexCoord;
+
+
 
 out vec3 fPos;
 flat out uint fFace;
-out vec2 texcoords;
+flat out uint texID;
+out vec2 texCoords;
 
 uniform mat4 uView;
 uniform mat4 uProj;
@@ -26,7 +28,16 @@ vec3 getPos(in uint data)
 
 uint getTexId(in uint data)
 {
-	return (data & 0x1FFE0000)>>17;
+	return (data & 0x7FE0000)>>17;
+}
+uint getUVId(in uint data)
+{
+	return (data & 0x18000000)>>27;
+}
+
+vec2 getUVCoords(in uint UVId)
+{
+	return vec2((UVId&2)>>1,UVId&1);
 }
 
 uint getFace(in uint data)
@@ -37,8 +48,9 @@ uint getFace(in uint data)
 void main()
 {
 	vec3 aPos = getPos(aData);
-	fPos = aPos;
+	fPos = (aPos+uChunkPos*16.f);
 	fFace = getFace(aData);
-	texcoords = aTexCoord;
+	texID = getTexId(aData);
+	texCoords = getUVCoords(getUVId(aData));
 	gl_Position = uProj*uView*(vec4(aPos.x, aPos.y, aPos.z, 1.0)+vec4(uChunkPos*16.f,0.0));
 }

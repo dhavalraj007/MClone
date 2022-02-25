@@ -3,11 +3,13 @@
 
 in vec3 fPos;
 flat in uint fFace;
-in vec2 texcoords;
+flat in uint texID;
+in vec2 texCoords;
 
 out vec4 FragColor;
 
-uniform sampler2D tex1;
+uniform sampler2DArray uTexArray;
+
 uniform vec3 uLightPos;
 uniform vec3 uLightColor;
 
@@ -47,7 +49,9 @@ void main()
 	vec3 lightDir = normalize(uLightPos - fPos);  
 	float diff = max(0.f,dot(lightDir,normal));
 	vec3 diffuse = diff*uLightColor;
-	
-	vec3 result = (ambient+diffuse)*texture(tex1,texcoords).rgb;
+
+ 	vec4 texel = texture(uTexArray,vec3(texCoords,texID));
+
+	vec3 result = (ambient+diffuse)*texel.rgb;
 	FragColor = vec4(result,1.0);
 }

@@ -91,6 +91,7 @@
       <Filter>include\utils</Filter>
     </ClInclude>
     <ClInclude Include="include\game\lightSource.h" />
+    <ClInclude Include="include\graphics\Misc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\engine.cpp">
@@ -142,6 +143,7 @@
       <Filter>src\utils</Filter>
     </ClCompile>
     <ClCompile Include="src\game\lightSource.cpp" />
+    <ClCompile Include="src\graphics\misc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\textureFragment.glsl">
