@@ -17,13 +17,12 @@ namespace graphics
 		//stbi_set_flip_vertically_on_load(true);
 		pixel* ImageData = reinterpret_cast<pixel*>( stbi_load(imagePath.c_str(), &imageWidth, &imageHeight, &imageChannels, 4));
 		MCLONE_ASSERT(ImageData, "Image not loaded!");
-		int numOfImages =int((imageWidth / 32.f ) * (imageHeight/ 32.f));
+		int numOfImages =int((imageWidth / _width) * (imageHeight/_height));
 
 		glGenTextures(1, &ID); MCLONE_CHECK_GL_ERROR;
 		glActiveTexture(GL_TEXTURE0 + texUnit); MCLONE_CHECK_GL_ERROR;
 		glBindTexture(GL_TEXTURE_2D_ARRAY, ID); MCLONE_CHECK_GL_ERROR;
 		// Allocate the storage.
-		int mipLevelCount = 7;
 		glTexImage3D(GL_TEXTURE_2D_ARRAY,
 			0,                 // mipmap level
 			GL_RGBA8,          // gpu texel format
@@ -36,24 +35,24 @@ namespace graphics
 			ImageData           // pixel data  
 		); MCLONE_CHECK_GL_ERROR;
 
-		std::vector<pixel> data(32*32);
+		std::vector<pixel> data(_width*_height);
 		int currX = 0;
 		int currY = 0;
 		for (int img_i = 0; img_i < numOfImages; img_i++)
 		{
-			for (int y = 0; y < 32; y++)
+			for (int y = 0; y < _height; y++)
 			{
-				for (int x = 0; x < 32; x++)
+				for (int x = 0; x < _width; x++)
 				{
 					pixel& imagePix = ImageData[x + currX + imageWidth * (y + currY)];
-					data[x + 32 * (32-y -1)] = imagePix;
+					data[x + _width * (_height-y -1)] = imagePix;
 				}
 			}
-			currX += 32;
+			currX += _width;
 			if (currX >= imageWidth)
 			{
 				currX = 0;
-				currY += 32;
+				currY += _height;
 			}
 			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0,
 				0, 0, img_i,

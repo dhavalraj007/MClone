@@ -7,57 +7,12 @@
 #include"graphics/Misc.h"
 namespace game
 {
-	//todo: add ID based textures to eliminate unorderded_map
-	// load blockfmt's all side,top,bottom texture's textureformat from mainNode to ChunkSystem::textureFormats and also load texture id into blockfmt.id
-	void ChunkSystem::loadTextureFormat(YAML::Node mainNode, blockFormat& blockFmt)
-	{
-		textureFormat tf;
-		tf.name = blockFmt.side;
-		tf.uvs[0][0] = mainNode["BLOCKS"][tf.name]["uvs"][0][0].as<float>();
-		tf.uvs[0][1] = mainNode["BLOCKS"][tf.name]["uvs"][0][1].as<float>();
-		tf.uvs[1][0] = mainNode["BLOCKS"][tf.name]["uvs"][1][0].as<float>();
-		tf.uvs[1][1] = mainNode["BLOCKS"][tf.name]["uvs"][1][1].as<float>();
-		tf.uvs[2][0] = mainNode["BLOCKS"][tf.name]["uvs"][2][0].as<float>();
-		tf.uvs[2][1] = mainNode["BLOCKS"][tf.name]["uvs"][2][1].as<float>();
-		tf.uvs[3][0] = mainNode["BLOCKS"][tf.name]["uvs"][3][0].as<float>();
-		tf.uvs[3][1] = mainNode["BLOCKS"][tf.name]["uvs"][3][1].as<float>();
-		tf.id = mainNode["BLOCKS"][tf.name]["ID"].as<uint32_t>();
-		blockFmt.sideID = tf.id;
-		textureFormats[tf.id] = tf;
-
-		tf.name = blockFmt.top;
-		tf.uvs[0][0] = mainNode["BLOCKS"][tf.name]["uvs"][0][0].as<float>();
-		tf.uvs[0][1] = mainNode["BLOCKS"][tf.name]["uvs"][0][1].as<float>();
-		tf.uvs[1][0] = mainNode["BLOCKS"][tf.name]["uvs"][1][0].as<float>();
-		tf.uvs[1][1] = mainNode["BLOCKS"][tf.name]["uvs"][1][1].as<float>();
-		tf.uvs[2][0] = mainNode["BLOCKS"][tf.name]["uvs"][2][0].as<float>();
-		tf.uvs[2][1] = mainNode["BLOCKS"][tf.name]["uvs"][2][1].as<float>();
-		tf.uvs[3][0] = mainNode["BLOCKS"][tf.name]["uvs"][3][0].as<float>();
-		tf.uvs[3][1] = mainNode["BLOCKS"][tf.name]["uvs"][3][1].as<float>();
-		tf.id = mainNode["BLOCKS"][tf.name]["ID"].as<uint32_t>();
-		blockFmt.topID = tf.id;
-		textureFormats[tf.id] = tf;
-
-		tf.name = blockFmt.bottom;
-		tf.uvs[0][0] = mainNode["BLOCKS"][tf.name]["uvs"][0][0].as<float>();
-		tf.uvs[0][1] = mainNode["BLOCKS"][tf.name]["uvs"][0][1].as<float>();
-		tf.uvs[1][0] = mainNode["BLOCKS"][tf.name]["uvs"][1][0].as<float>();
-		tf.uvs[1][1] = mainNode["BLOCKS"][tf.name]["uvs"][1][1].as<float>();
-		tf.uvs[2][0] = mainNode["BLOCKS"][tf.name]["uvs"][2][0].as<float>();
-		tf.uvs[2][1] = mainNode["BLOCKS"][tf.name]["uvs"][2][1].as<float>();
-		tf.uvs[3][0] = mainNode["BLOCKS"][tf.name]["uvs"][3][0].as<float>();
-		tf.uvs[3][1] = mainNode["BLOCKS"][tf.name]["uvs"][3][1].as<float>();
-		tf.id = mainNode["BLOCKS"][tf.name]["ID"].as<uint32_t>();
-		blockFmt.bottomID = tf.id;
-		textureFormats[tf.id] = tf;
-	}
-
 	void ChunkSystem::loadFormats()
 	{
 		YAML::Node blockFormatNode = YAML::LoadFile("blockFormat.Yaml");
 		YAML::Node textureFormatNode = YAML::LoadFile("textureFormat.yaml");
 		blockFormats.resize(100);	// max 100 block types
-		textureFormats.resize((1<<12) -1); // max 2^12-1 textures; 
+	
 		for (auto Nids : blockFormatNode["BLOCKS"])		// for all the block types fill in the blockFormats vector
 		{
 			int id = Nids.first.as<int>();
@@ -69,13 +24,10 @@ namespace game
 			blockFormats[id].bottom = Nids.second["bottom"].as<std::string>();
 			blockFormats[id].isTransparent = Nids.second["isTransparent"].as<bool>();
 			// at this point we have all the information from the blockFormats.yaml file into our datastructre blockFormats vector
-			// now we have two piecies left to handle
-			// first is that for all the block sides we have the texture names but not the ID so we have to get the ID from textureFormats.yaml
-			// (actually I can eliminate the whole textureFormats datasturucture.)
-			// second thing is loading name,uvs,id into textureFormats dataStructure
-			loadTextureFormat(textureFormatNode, blockFormats[id]);
-			loadTextureFormat(textureFormatNode, blockFormats[id]);
-			loadTextureFormat(textureFormatNode, blockFormats[id]);
+			// now for all the block sides we have the texture names but not the ID so we have to get the ID from textureFormats.yaml
+			blockFormats[id].sideID   = textureFormatNode["BLOCKS"][blockFormats[id].side]["ID"].as<uint32_t>();
+			blockFormats[id].topID    = textureFormatNode["BLOCKS"][blockFormats[id].top]["ID"].as<uint32_t>();
+			blockFormats[id].bottomID = textureFormatNode["BLOCKS"][blockFormats[id].bottom]["ID"].as<uint32_t>();
 			nameToIdMap[blockFormats[id].name] = id;
 		}
 	}

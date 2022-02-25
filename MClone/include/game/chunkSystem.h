@@ -32,8 +32,7 @@ namespace game
 	{
 		//todo: add ID based textures to eliminate unorderded_map
 		std::unordered_map<std::string, int> nameToIdMap;	//for blocks
-		std::vector<blockFormat> blockFormats;
-		std::vector<textureFormat> textureFormats;		
+		std::vector<blockFormat> blockFormats;	
 	public:
 		std::vector<std::shared_ptr<Chunk>> chunks;
 	public:
@@ -41,6 +40,5 @@ namespace game
 		void createDataForChunk(std::shared_ptr<Chunk> chunk);
 	private:
 		void loadFormats();
-		void loadTextureFormat(YAML::Node mainNode, blockFormat& blockFmt);
 	};
 }
