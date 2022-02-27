@@ -1,8 +1,2 @@
 # MClone
-
-- [x] window
-- [x] Mouse Input
-- [x] Keyboard Input
-- [x] Logger
-- [x] shaders
-- [ ] texture 2d
+![sunLightSource](https://github.com/dhavalraj007/MClone/blob/master/ScreenShots/2022-02-25%2014_10_04-.png)
