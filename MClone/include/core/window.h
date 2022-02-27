@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include<glm/glm.hpp>
+#include"graphics/camera.h"
 
 typedef struct SDL_Window SDL_Window;
 typedef void* SDL_GLContext;
@@ -27,7 +28,7 @@ namespace core
 		void setClearColor(glm::vec4 cc);
 		void clearScreen();
 		void swapbuffers();
-		void pollEvents();
+		void pollEvents(graphics::FlyCamera& cam);
 		inline WindowProperties getProps() const { return m_props; }
 		bool m_ShouldClose = false;
 	private:

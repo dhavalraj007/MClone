@@ -1,8 +1,10 @@
 #include "core\window.h"
+#include "core\globals.h"
 #include"log.h"
 #include<sdl2/SDL.h>
 #include<glad/glad.h>
 #include<iostream>
+#include"graphics/camera.h"
 
 namespace core
 {
@@ -48,6 +50,8 @@ namespace core
 		
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_WarpMouseInWindow(m_Window, props.w/2, props.h/2);
+		SDL_SetHintWithPriority(SDL_HINT_MOUSE_RELATIVE_MODE_WARP, "1", SDL_HINT_OVERRIDE);
+		SDL_SetRelativeMouseMode(SDL_TRUE);
 
 		m_Context = SDL_GL_CreateContext(m_Window);
 
@@ -84,7 +88,7 @@ namespace core
 		SDL_GL_SwapWindow(m_Window);
 	}
 
-	void Window::pollEvents()
+	void Window::pollEvents(graphics::FlyCamera& cam)
 	{
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
@@ -94,6 +98,29 @@ namespace core
 			case SDL_QUIT:
 				m_ShouldClose = true;
 				break;
+			case SDL_KEYDOWN:
+			{
+				switch (e.key.keysym.scancode)
+				{
+				case SDL_SCANCODE_ESCAPE:
+					m_ShouldClose = true;
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+			case SDL_MOUSEMOTION:
+			{
+				if (globals::MouseFirst)
+				{
+					cam.handleMouseInput(globals::deltaTime, 0, 0);
+					globals::MouseFirst = false;
+				}
+				else
+					cam.handleMouseInput(globals::deltaTime, e.motion.xrel, -e.motion.yrel);
+				break;
+			}
 			default:
 				break;
 			}

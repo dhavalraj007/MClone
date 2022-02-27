@@ -92,6 +92,7 @@
     </ClInclude>
     <ClInclude Include="include\game\lightSource.h" />
     <ClInclude Include="include\graphics\Misc.h" />
+    <ClInclude Include="include\core\globals.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\engine.cpp">
@@ -144,6 +145,7 @@
     </ClCompile>
     <ClCompile Include="src\game\lightSource.cpp" />
     <ClCompile Include="src\graphics\misc.cpp" />
+    <ClCompile Include="src\core\globals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\textureFragment.glsl">

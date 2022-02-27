@@ -102,6 +102,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\core\engine.h" />
+    <ClInclude Include="include\core\globals.h" />
     <ClInclude Include="include\core\logmanager.h" />
     <ClInclude Include="include\core\window.h" />
     <ClInclude Include="include\game\chunk.h" />
@@ -121,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\engine.cpp" />
+    <ClCompile Include="src\core\globals.cpp" />
     <ClCompile Include="src\core\logmanager.cpp" />
     <ClCompile Include="src\core\window.cpp" />
     <ClCompile Include="src\game\chunk.cpp" />

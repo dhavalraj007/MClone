@@ -1,6 +1,8 @@
 #include<filesystem>
 
 #include "core/engine.h"
+#include "core/window.h"
+#include "core/globals.h"
 
 #include"log.h"
 
@@ -29,7 +31,7 @@ namespace core
 		m_logManager.initialize();
 		MCLONE_INFO(" cwd:{}", std::filesystem::current_path().string());
 		
-		m_window.create(core::WindowProperties());
+		m_window.create(globals::windowProps);
 		input::Mouse::Init();
 		input::Keyboard::Init();
 
@@ -47,7 +49,7 @@ namespace core
 		game::ChunkSystem chunkSystem;
 		graphics::TextureArray texArray("texturePack0.png", 32, 32,1);
 
-		int gridSize = 10;
+		int gridSize = 4;
 		for (int z = -gridSize; z < gridSize; z++)
 		{
 			for (int x = -gridSize; x < gridSize; x++)
@@ -74,17 +76,18 @@ namespace core
 		//glEnable(GL_BLEND);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		float deltaTime, lastFrameTime = 0;
+		float lastFrameTime = 0;
 		float currTime;
 
 		while (!m_window.m_ShouldClose)
 		{
 			currTime = SDL_GetTicks() * 0.001f;
-			deltaTime = currTime - lastFrameTime;
+			globals::deltaTime = currTime - lastFrameTime;
 			lastFrameTime = currTime;
 			//MCLONE_TRACE("{}", deltaTime);
 
-			m_window.pollEvents();
+			m_window.pollEvents(cam);
+			cam.handleKeyboardInput(globals::deltaTime);
 			m_window.clearScreen();
 			input::Mouse::Update();
 			input::Keyboard::Update();
@@ -109,7 +112,7 @@ namespace core
 			texArray.bind();
 			lightingShader.bind();
 
-			cam.handleInput(deltaTime);
+			//cam.handleInput(deltaTime);
 			lightingShader.setUniformMat4("uView", cam.getViewMatrix());
 			lightingShader.setUniformMat4("uProj", cam.getProjMatrix());
 			lightingShader.setUniformFloat3("uLightPos", lightSource.getPos());

@@ -1,3 +1,4 @@
+#include"core/globals.h"
 #include "graphics\camera.h"
 #include "glm\gtc\matrix_transform.hpp"
 #include"input\mouse.h"
@@ -52,8 +53,28 @@ namespace graphics
 		: FlyCamera(pos, aspectRatio, {0.f, 0.f, -1.f}, 0.0001f)
 	{}
 
-	void FlyCamera::handleInput(float dt)
+
+	void FlyCamera::handleMouseInput(float dt, int xOffset, int yOffset)
 	{
+		yaw += (float)xOffset*sensitivity;
+		pitch += (float)yOffset*sensitivity;
+		if (pitch > 89.0f)
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
+
+		setOrientation(
+			{
+				cos(glm::radians(pitch)) * cos(glm::radians(yaw)),
+				sin(glm::radians(pitch)),
+				cos(glm::radians(pitch)) * sin(glm::radians(yaw))
+			}
+		);
+	}
+
+	void FlyCamera::handleKeyboardInput(float dt)
+	{
+		//MCLONE_TRACE("{} {}", xOffset, yOffset);
 		if (input::Keyboard::Key(input::Keys::MKEY_LSHIFT))
 		{
 			speed =  dt*fastspeed;
@@ -84,35 +105,6 @@ namespace graphics
 			changed = true;
 		}
 
-		
-		float xOffset;
-		float yOffset;
-		if (t_firstMouse)
-		{
-			xOffset = 0;
-			yOffset = 0;
-			t_firstMouse = false;
-		}
-		else
-		{
-			xOffset = (input::Mouse::x - input::Mouse::xLast) * sensitivity;
-			yOffset = (input::Mouse::yLast - input::Mouse::y) * sensitivity;
-		}
-		
-		yaw += (float)xOffset;
-		pitch += (float)yOffset;
-		if (pitch > 89.0f)
-			pitch = 89.0f;
-		if (pitch < -89.0f)
-			pitch = -89.0f;
-
-		setOrientation(
-			{
-				cos(glm::radians(pitch))*cos(glm::radians(yaw)),
-				sin(glm::radians(pitch)),
-				cos(glm::radians(pitch))*sin(glm::radians(yaw))
-			}
-		);
 
 		if (changed)
 		{
@@ -120,6 +112,7 @@ namespace graphics
 			Camera::setTarget(m_position + m_orientation);
 		}
 	}
+
 	inline void FlyCamera::setOrientation(const glm::vec3& orientation)
 	{
 		m_orientation = glm::normalize(orientation); 
