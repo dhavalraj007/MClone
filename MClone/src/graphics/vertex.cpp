@@ -21,7 +21,7 @@ namespace graphics
 
 	RawVertexBuffer::~RawVertexBuffer()
 	{
-		glDeleteBuffers(1, &m_Vbo);	//MCLONE_CHECK_GL_ERROR;
+		glDeleteBuffers(1, &m_Vbo);	MCLONE_CHECK_GL_ERROR;
 	}
 
 	void RawVertexBuffer::setLayout(const std::vector<uint32_t>& layout)
@@ -125,6 +125,15 @@ namespace graphics
 		}
 		unbind();
 		m_IsValid = true;
+	}
+
+	void VertexArray::uploadAllVbos(bool dynamic)
+	{
+		for (auto& vbo : m_Vbos)
+		{
+			if(!vbo->IsUploaded())
+				vbo->upload(dynamic);
+		}
 	}
 
 	void VertexArray::bind()

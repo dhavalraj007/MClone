@@ -32,10 +32,13 @@ namespace game
 	public:
 		glm::ivec3 position;
 		std::shared_ptr<graphics::VertexArray> vao;
-		static const int CHUNK_WIDTH = 16;	//x
-		static const int CHUNK_HEIGHT = 255;	//y (dont fukin increase this shit than 255)
-		static const int CHUNK_BREADTH = 16; //z
+		static constexpr int CHUNK_WIDTH = 16;	//x
+		static constexpr const int CHUNK_HEIGHT = 255;	//y (dont fukin increase this shit than 255)
+		static constexpr const int CHUNK_BREADTH = 16; //z
 		std::vector<internalBlock> internalBlocks;
+		std::vector<uint32_t> vertexData;	// will hold the data untill it passes onto the gpu and then it will be moved to vao; // dont use this after uploading to gpu;
+		bool allDataDone=false;
+		bool isBlocksInit=false;
 	public:
 		Chunk(const glm::ivec3 pos);
 		void createData(uint32_t seed);
@@ -64,7 +67,6 @@ namespace game
 
 	private:
 	private:
-		bool isBlocksInit=false;
 	};
 
 	

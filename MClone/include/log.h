@@ -26,4 +26,5 @@
 #define MCLONE_WARN(...)  (void)0
 #define MCLONE_ERROR(...) (void)0
 #define MCLONE_FATAL(...) (void)0
+#define MCLONE_ASSERT(...) (void)0
 #endif

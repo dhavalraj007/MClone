@@ -113,7 +113,7 @@ namespace graphics
 			MCLONE_ASSERT(m_IsLayoutSet, "Layout for vertexBuffer not set.");
 			m_Stride *= sizeof(T);
 			m_Size = sizeof(T) * (uint32_t)m_DataVec.size();
-			MCLONE_TRACE("m_Strid:{} , m_Size:{}", m_Stride, m_Size);
+			//MCLONE_TRACE("m_Strid:{} , m_Size:{}", m_Stride, m_Size);
 			MCLONE_ASSERT(m_Size > 0, "VertexBuffer::Upload() calling with m_Size = 0");
 			m_Data = &m_DataVec[0];
 			RawVertexBuffer::upload(dynamic);
@@ -140,16 +140,16 @@ namespace graphics
 		void setElements(const std::vector<uint32_t>& elements);
 
 		void upload();
-
+		void uploadAllVbos(bool dynamic);
 		void bind();
 		void unbind();
 
 	private:
 		bool m_IsValid;
 		uint32_t m_VertexCount, m_ElementCount;
+		std::vector<std::unique_ptr<RawVertexBuffer>> m_Vbos;
 		uint32_t m_Vao, m_Ebo;
 		uint32_t m_AttributeCount;
-		std::vector<std::unique_ptr<RawVertexBuffer>> m_Vbos;
 		std::vector<uint32_t> m_elements;
 	};
 }

@@ -47,17 +47,9 @@ namespace core
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;
+		chunkSystem.setChunkRadius(10);
 		graphics::TextureArray texArray("texturePack0.png", 32, 32,1);
 
-		int gridSize = 4;
-		for (int z = -gridSize; z < gridSize; z++)
-		{
-			for (int x = -gridSize; x < gridSize; x++)
-			{
-				std::shared_ptr<game::Chunk> chunk = std::make_shared<game::Chunk>(glm::ivec3{ x,0,z });
-				chunkSystem.createDataForChunk(chunk);
-			}
-		}
 
 		game::LightSource lightSource({ 0.f,200.f,0.f }, { 1.f, 1.f, 1.f });
 		lightSource.setScale(5.f);
@@ -70,6 +62,8 @@ namespace core
 		graphics::FlyCamera cam({ 0.0f,385.f,0.f }, m_window.getProps().aspectRatio);
 		cam.fastspeed = 50.f;
 		cam.setZFar(1000.f);
+		chunkSystem.createChunkAreaAround(cam.getPos());
+
 		lightingShader.setUniformMat4("uView", cam.getViewMatrix());
 		lightingShader.setUniformMat4("uProj", cam.getProjMatrix());
 		glEnable(GL_CULL_FACE);
@@ -118,15 +112,18 @@ namespace core
 			lightingShader.setUniformFloat3("uLightPos", lightSource.getPos());
 			lightingShader.setUniformFloat3("uLightColor", lightSource.getColor());
 
+			chunkSystem.createChunkAreaAround(cam.getPos());
 			for (auto chunk : chunkSystem.chunks)
 			{
-				chunk->vao->bind();
-				lightingShader.setUniformInt3("uChunkPos", chunk->position);
-				glDrawArrays(GL_TRIANGLES, 0, chunk->vao->getVertexCount());
+				if (chunk->vao->isValid())
+				{
+					chunk->vao->bind();
+					lightingShader.setUniformInt3("uChunkPos", chunk->position);
+					glDrawArrays(GL_TRIANGLES, 0, chunk->vao->getVertexCount());
+				}
 			}
-
-			
 			m_window.swapbuffers();
+			globals::frameCount++;
 		}
 	}
 }

@@ -10,5 +10,5 @@ namespace graphics
 #ifndef MCLONE_CONFIG_RELEASE
 #define MCLONE_CHECK_GL_ERROR graphics::checkGLError();
 #else
-#define MCLONE_CHECK_GL_ERROR (void)0
+#define MCLONE_CHECK_GL_ERROR (void)0;
 #endif
