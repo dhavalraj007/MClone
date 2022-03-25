@@ -47,7 +47,7 @@ namespace core
 	void Engine::run()
 	{
 		game::ChunkSystem chunkSystem;
-		chunkSystem.setChunkRadius(10);
+		chunkSystem.setChunkRadius(6);
 		graphics::TextureArray texArray("texturePack0.png", 32, 32,1);
 
 

@@ -65,6 +65,7 @@ namespace game
 		inline int getChunkRadius()const { return chunkRadius; }
 		inline void setChunkRadius(int radii) { chunkRadius = radii; }
 		void uploadReadyChunksToGpu();
+		void cleanUpChunks();
 	private:
 		void loadFormats();
 		void uploadDataToChunkVao(std::shared_ptr<Chunk> chunk);

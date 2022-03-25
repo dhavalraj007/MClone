@@ -209,19 +209,19 @@ namespace game
 		chunks.insert(chunk);
 	}
 
+	static bool shouldStartDeleting = false;
+	static bool shouldStartUploading = true;
+
 	void ChunkSystem::uploadReadyChunksToGpu()
 	{
-		static const int N = 1000;
-		static const int uploadRatePerFrame = 4;
-		static uint32_t lastFrameCount = 0;
-
-		uint32_t currFrameCount = globals::frameCount;
-		MCLONE_TRACE("{}", currFrameCount);
-		if (currFrameCount - lastFrameCount < N)
+		static const int uploadRatePerFrame = 2;
+		static const int uploadInterval = 20;
+		if ((globals::frameCount < uploadInterval) || (shouldStartUploading && (globals::frameCount % uploadInterval) == 0))
 		{
 			// gpu work no async
 			int uploadCount = 0;
-			for (auto& chunk_i = newChunks.begin(); uploadCount < uploadRatePerFrame && chunk_i != newChunks.end();)
+			auto& chunk_i = newChunks.begin();
+			while (((globals::frameCount < uploadInterval) || uploadCount < uploadRatePerFrame) && chunk_i != newChunks.end())
 			{
 				auto chunk = *(chunk_i);
 				if (chunk->allDataDone && !chunk->vao->isValid())
@@ -233,10 +233,44 @@ namespace game
 				else
 					chunk_i++;
 			}
+
+			if (chunk_i == newChunks.end())//meaning all chunks are done uploading
+			{
+				shouldStartDeleting = true;
+				shouldStartUploading = false;
+			}
 		}
-		else
+	}
+	void ChunkSystem::cleanUpChunks()
+	{
+		static const int deleteRatePerFrame = 2;
+		static const int deleteInterval = 5;
+
+		if (shouldStartDeleting && (globals::frameCount % deleteInterval) == 0)		// delete out of bounds chunks only after loading new chunks
 		{
-			lastFrameCount = currFrameCount;
+			int deleteCount = 0;
+			auto& chunk_i = chunks.begin();
+			while (deleteCount < deleteRatePerFrame && chunk_i != chunks.end())
+			{
+				auto chunk = *(chunk_i);
+				if (chunk->position.x > currChunkAreaCenter.x + chunkRadius
+					|| chunk->position.z > currChunkAreaCenter.z + chunkRadius
+					|| chunk->position.x < currChunkAreaCenter.x - chunkRadius
+					|| chunk->position.z < currChunkAreaCenter.z - chunkRadius)
+				{
+					MCLONE_TRACE("erasing chunk at {} {} {}", chunk->position.x, chunk->position.y, chunk->position.z);
+					chunkPosSet.erase(chunk->position);
+					chunk_i = chunks.erase(chunk_i);
+					deleteCount++;
+				}
+				else
+					chunk_i++;
+			}
+			if (chunk_i == chunks.end())//meaning all outof bounds chunks are done deleting
+			{
+				shouldStartDeleting = false;
+				shouldStartUploading = true;
+			}
 		}
 	}
 
@@ -267,37 +301,6 @@ namespace game
 		uploadReadyChunksToGpu();
 
 		// to remove the other chunks
-		if (newChunks.size() > 0)
-		{
-			static const int N = 1000;
-			static const int uploadRatePerFrame = 4;
-			static uint32_t lastFrameCount = 0;
-
-			uint32_t currFrameCount = globals::frameCount;
-			if (currFrameCount - lastFrameCount < N)
-			{
-				int uploadCount = 0;
-				for (auto& chunk_i = chunks.begin(); uploadCount < uploadRatePerFrame && chunk_i != chunks.end();)
-				{
-					auto chunk = *(chunk_i);
-					if (chunk->position.x > currChunkAreaCenter.x + chunkRadius
-						|| chunk->position.z > currChunkAreaCenter.z + chunkRadius
-						|| chunk->position.x < currChunkAreaCenter.x - chunkRadius
-						|| chunk->position.z < currChunkAreaCenter.z - chunkRadius)
-					{
-						MCLONE_TRACE("erasing chunk at {} {} {}", chunk->position.x, chunk->position.y, chunk->position.z);
-						chunkPosSet.erase(chunk->position);
-						chunk_i = chunks.erase(chunk_i);
-						uploadCount++;
-					}
-					else
-						chunk_i++;
-				}
-			}
-			else
-			{
-				lastFrameCount = currFrameCount;
-			}
-		}
+		cleanUpChunks();
 	}
 }
