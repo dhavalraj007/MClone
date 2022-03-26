@@ -12,6 +12,8 @@ uniform sampler2DArray uTexArray;
 
 uniform vec3 uLightPos;
 uniform vec3 uLightColor;
+uniform vec3 uPlayerPos;
+uniform int  uChunkRadius;
 
 void faceToNormal(in int face, out vec3 normal)
 {
@@ -50,8 +52,18 @@ void main()
 	float diff = max(0.f,dot(lightDir,normal));
 	vec3 diffuse = diff*uLightColor;
 
+
+	float distanceToPlayer = length(fPos-uPlayerPos);
+	const float density = 0.01;
+	const float gradient = 2;
+	float visibility = clamp(exp(-pow((distanceToPlayer*density),gradient)),0.0,1.0);
+	//float d = distanceToPlayer/(uChunkRadius*16.0);
+	vec4 fogColor = vec4(153.0 / 255.0, 204.0 / 255.0, 1.0, 1.0);
+
+
  	vec4 texel = texture(uTexArray,vec3(texCoords,texID));
 
 	vec3 result = (ambient+diffuse)*texel.rgb;
-	FragColor = vec4(result,1.0);
+	FragColor = mix(fogColor,vec4(result,1.0),visibility);
+	
 }

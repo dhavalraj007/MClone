@@ -111,7 +111,10 @@ namespace core
 			lightingShader.setUniformMat4("uProj", cam.getProjMatrix());
 			lightingShader.setUniformFloat3("uLightPos", lightSource.getPos());
 			lightingShader.setUniformFloat3("uLightColor", lightSource.getColor());
-
+			lightingShader.setUniformFloat3("uPlayerPos", cam.getPos());
+			lightingShader.setUniformInt("uChunkRadius", chunkSystem.getChunkRadius());
+			
+			
 			chunkSystem.createChunkAreaAround(cam.getPos());
 			for (auto chunk : chunkSystem.chunks)
 			{

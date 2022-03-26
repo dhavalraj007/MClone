@@ -215,7 +215,7 @@ namespace game
 	void ChunkSystem::uploadReadyChunksToGpu()
 	{
 		static const int uploadRatePerFrame = 2;
-		static const int uploadInterval = 20;
+		static const int uploadInterval = 1;
 		if ((globals::frameCount < uploadInterval) || (shouldStartUploading && (globals::frameCount % uploadInterval) == 0))
 		{
 			// gpu work no async
@@ -244,7 +244,7 @@ namespace game
 	void ChunkSystem::cleanUpChunks()
 	{
 		static const int deleteRatePerFrame = 2;
-		static const int deleteInterval = 5;
+		static const int deleteInterval = 1;
 
 		if (shouldStartDeleting && (globals::frameCount % deleteInterval) == 0)		// delete out of bounds chunks only after loading new chunks
 		{

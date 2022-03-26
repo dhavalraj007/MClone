@@ -19,9 +19,7 @@ namespace core
 		hMin = 180;
 		flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 		aspectRatio = 16.0f / 9.0f;
-		clearColor = glm::vec4(static_cast<float>(0x64) / static_cast<float>(0xFF),
-			static_cast<float>(0x95) / static_cast<float>(0xFF),
-			static_cast<float>(0xED) / static_cast<float>(0xFF), 1);
+		clearColor = glm::vec4(153.0 / 255.0, 204.0 / 255.0, 1.0,1.0);
 	}
 	Window::Window()
 		:m_Window(nullptr),
